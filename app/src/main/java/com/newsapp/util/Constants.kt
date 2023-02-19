@@ -5,4 +5,13 @@ object Constants {
     const val BASE_URL = "https://newsapi.org"
     const val ERROR = "Something went wrong, please try again after sometime"
 
+    val categories = listOf(
+        "Latest",
+        "Business",
+        "Entertainment",
+        "Health",
+        "Science",
+        "Sports",
+        "Technology"
+    )
 }

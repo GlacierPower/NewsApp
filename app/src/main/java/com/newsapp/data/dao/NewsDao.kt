@@ -11,15 +11,15 @@ interface NewsDao {
     suspend fun save(news: NewsEntity): Long
 
     @Query("SELECT * FROM newsEntity ORDER BY id DESC")
-    fun getAllArticles(): Flow<List<NewsEntity>>
+    fun getAllNews(): Flow<List<NewsEntity>>
 
     @Query("SELECT * FROM newsEntity WHERE title= :q")
-    suspend fun getArticleByTitle(q: String): NewsEntity
+    suspend fun getNewsByTitle(q: String): NewsEntity
 
     @Delete
-    suspend fun deleteArticle(newsEntity: NewsEntity)
+    suspend fun deleteNews(newsEntity: NewsEntity)
 
     @Query("DELETE FROM newsEntity")
-    suspend fun deleteAllArticle()
+    suspend fun deleteAllNews()
 
 }
