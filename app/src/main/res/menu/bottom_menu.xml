@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/newsFragment"
+        android:icon="@drawable/news"
+        android:title="@string/news" />
+
+    <item
+        android:id="@+id/categoryFragment"
+        android:icon="@drawable/list"
+        android:title="@string/category" />
+
+    <item
+        android:id="@+id/sourceFragment"
+        android:icon="@drawable/source"
+        android:title="@string/source" />
+
+    <item
+        android:id="@+id/settingFragment"
+        android:icon="@drawable/setting"
+        android:title="@string/settings" />
+</menu>
