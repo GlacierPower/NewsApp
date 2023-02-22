@@ -19,14 +19,14 @@ interface ApiService {
     ): Response<NewsResponse>
 
     @GET("v2/top-headlines")
-    suspend fun getTopHeadlines(
+    suspend fun getNewsByCategory(
         @Query("country") country: String = "us",
         @Query("category") category: String = categories.first(),
         @Query("page") page: Int = 1,
         @Query("apiKey") apiKey: String = KEY,
     ): Response<NewsResponse>
 
-    @GET("/v2/sources")
+    @GET("v2/sources")
     suspend fun getSourcesNews(
         @Query("country") country: String = "us",
         @Query("apiKey") apiKey: String = KEY,

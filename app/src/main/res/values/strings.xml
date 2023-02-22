@@ -5,7 +5,6 @@
     <string name="source_description">Source description</string>
     <string name="source_country">Source country</string>
     <string name="category">Category</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="try_again">Try again</string>
@@ -15,4 +14,8 @@
     <string name="settings">Settings</string>
     <string name="change_theme">Change theme</string>
     <string name="saved">Saved</string>
+    <string name="category_first">#000000</string>
+    <string name="category_second">#FFFFFF</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="profile">Profile</string>
 </resources>

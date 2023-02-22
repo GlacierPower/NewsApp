@@ -14,7 +14,7 @@ abstract class PrefsDataStore(context: Context, fileName: String) {
     internal val dataStore: DataStore<Preferences> = context.createDataStore(fileName)
 }
 
-class UIModeDataStore(context: Context) : PrefsDataStore(context, PREF_FILE_UI_MODE), UIModeImpl {
+class DataStore(context: Context) : PrefsDataStore(context, PREF_FILE_UI_MODE), UIModeImpl {
 
     override val uiMode: Flow<Boolean>
         get() = dataStore.data.map { preferences ->
