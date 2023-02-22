@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -14,67 +13,64 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_height="160dp"
         android:layout_marginStart="5dp"
-        android:layout_height="150dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/sourceImage"
-
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="25dp"
-            android:scaleType="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/source_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
             android:ellipsize="end"
-            android:maxLines="1"
-
+            android:textStyle="bold"
             android:hint="@string/source_name"
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/sourceImage"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            android:maxLines="1"
+            android:text="@{source.name}"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/description_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
             android:ellipsize="end"
             android:hint="@string/source_description"
             android:maxLines="3"
-
+            android:text="@{source.description}"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/sourceImage"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/source_name" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/category_source"
-            android:layout_width="169dp"
+            android:layout_width="20dp"
             android:layout_height="0dp"
-            android:layout_marginStart="50dp"
             android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
             android:ellipsize="end"
             android:hint="@string/source_country"
             android:maxLines="1"
-
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/sourceImage"
+            android:text="@{source.country}"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_source" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:id="@+id/border"
+            android:layout_width="360dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

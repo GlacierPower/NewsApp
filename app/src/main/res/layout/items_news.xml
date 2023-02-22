@@ -18,7 +18,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/newsImage"
-
+            urlToImage="@{news.urlToImage}"
             android:layout_width="390dp"
             android:layout_height="220dp"
             android:layout_marginTop="10dp"
@@ -26,18 +26,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/sourceImage"
-
-            android:layout_width="50dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="15dp"
-            android:scaleType="center"
-            app:layout_constraintEnd_toStartOf="@+id/newsDateTime"
-            app:layout_constraintStart_toEndOf="@+id/newsName"
-            app:layout_constraintTop_toBottomOf="@+id/newsTitle" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/newsName"
@@ -47,7 +35,7 @@
             android:layout_marginTop="15dp"
             android:ellipsize="end"
             android:maxLines="1"
-
+            android:text="@{news.source.name}"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newsTitle"
@@ -59,7 +47,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
-
+            android:text="@{news.title}"
             android:hint="@string/title"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -70,7 +58,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/newsDateTime"
-
+            timeAgoFormat="@{news.publishedAt}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -80,18 +68,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newsTitle"
             tools:text=" 5 hours ago" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btn_goto_news"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_saved_news"
-            app:layout_constraintStart_toEndOf="@+id/newsDateTime"
-            app:layout_constraintTop_toBottomOf="@+id/newsTitle">
-
-        </androidx.appcompat.widget.AppCompatImageButton>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_saved_news"
@@ -116,8 +92,15 @@
             android:src="@drawable/share"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
         </androidx.appcompat.widget.AppCompatImageButton>
+        <View
+            android:id="@+id/border"
+            android:layout_width="390dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

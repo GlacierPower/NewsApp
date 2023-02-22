@@ -7,10 +7,5 @@
         android:title="@string/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
-    <item
-        android:id="@+id/settingMenuItem"
-        android:checkable="true"
-        android:icon="@drawable/setting"
-        android:title="@string/settings"
-        app:showAsAction="always" />
+
 </menu>

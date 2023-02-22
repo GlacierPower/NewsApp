@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/newsFragment"
-        android:name="com.newsapp.presentation.NewsFragment"
-        android:label="fragment_news"
+        android:name="com.newsapp.presentation.fragments.NewsFragment"
+        android:label="News"
         tools:layout="@layout/fragment_news" >
         <action
             android:id="@+id/action_newsFragment_to_searchFragment"
@@ -16,22 +16,22 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.newsapp.presentation.CategoryFragment"
-        android:label="fragment_category"
+        android:name="com.newsapp.presentation.fragments.CategoryFragment"
+        android:label="Category"
         tools:layout="@layout/fragment_category" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.newsapp.presentation.SearchFragment"
-        android:label="fragment_search"
+        android:name="com.newsapp.presentation.fragments.SearchFragment"
+        android:label="Search"
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/sourceFragment"
-        android:name="com.newsapp.presentation.SourceFragment"
-        android:label="fragment_source"
+        android:name="com.newsapp.presentation.fragments.SourceFragment"
+        android:label="Source"
         tools:layout="@layout/fragment_source" />
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.newsapp.presentation.SettingFragment"
-        android:label="fragment_setting"
+        android:name="com.newsapp.presentation.fragments.SettingFragment"
+        android:label="Profile"
         tools:layout="@layout/fragment_setting" />
 </navigation>
