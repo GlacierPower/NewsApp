@@ -1,28 +1,40 @@
-package com.newsapp.presentation.fragments
+package com.newsapp.presentation.views.source
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.newsapp.data.model.SourcesNews
 import com.newsapp.databinding.FragmentSourceBinding
-import com.newsapp.presentation.MainActivity
 import com.newsapp.presentation.adapters.SourceAdapter
-import com.newsapp.presentation.view_models.NewsViewModel
-import com.newsapp.util.Constants.NAME
+import com.newsapp.presentation.adapters.listener.ISourceListener
 import com.newsapp.util.Resources
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SourceFragment  : DefaultFragment<FragmentSourceBinding, NewsViewModel>() {
+class SourceFragment : Fragment(), ISourceListener {
 
-    override val viewModel: NewsViewModel by viewModels()
+    private val viewModel: SourceViewModel by viewModels()
+
+    private var _viewBinding: FragmentSourceBinding? = null
+    private val viewBinding get() = _viewBinding!!
+
     private lateinit var sourceAdapter: SourceAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        _viewBinding = FragmentSourceBinding.inflate(inflater)
+
+        return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,8 +44,8 @@ class SourceFragment  : DefaultFragment<FragmentSourceBinding, NewsViewModel>() 
             viewModel.getSourceNews()
         }
 
-        sourceAdapter = SourceAdapter(requireContext())
-        binding.sourceRecycler.apply {
+        sourceAdapter = SourceAdapter(this)
+        viewBinding.sourceRecycler.apply {
             setHasFixedSize(true)
             adapter = sourceAdapter
 
@@ -42,7 +54,7 @@ class SourceFragment  : DefaultFragment<FragmentSourceBinding, NewsViewModel>() 
                     is Resources.Success -> {
                         progressBar(false)
                         sourceAdapter.differ.submitList(response.data!!.sources)
-                        binding.sourceRecycler.adapter = sourceAdapter
+                        viewBinding.sourceRecycler.adapter = sourceAdapter
                     }
                     is Resources.Error -> {
                         progressBar(false)
@@ -56,14 +68,16 @@ class SourceFragment  : DefaultFragment<FragmentSourceBinding, NewsViewModel>() 
     }
 
     private fun progressBar(status: Boolean) {
-        binding.progressBar.visibility = if (status) View.VISIBLE else View.GONE
+        viewBinding.progressBar.visibility = if (status) View.VISIBLE else View.GONE
 
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentSourceBinding.inflate(inflater, container, false)
+
+    override fun onSourceClicked(sourceResponse: SourcesNews) {
+        val builder = CustomTabsIntent.Builder()
+        val customTabsIntent = builder.build()
+        customTabsIntent.launchUrl(requireContext(), Uri.parse(sourceResponse.url))
+    }
 
 
 }

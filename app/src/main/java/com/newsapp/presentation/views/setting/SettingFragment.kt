@@ -1,4 +1,4 @@
-package com.newsapp.presentation.fragments
+package com.newsapp.presentation.views.setting
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -6,27 +6,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.newsapp.databinding.FragmentSettingBinding
-import com.newsapp.presentation.MainActivity
-import com.newsapp.presentation.view_models.NewsViewModel
-import com.newsapp.util.Constants.NAME
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SettingFragment : DefaultFragment<FragmentSettingBinding, NewsViewModel>() {
+class SettingFragment : Fragment() {
 
-    override val viewModel: NewsViewModel by viewModels()
+    private val viewModel: SettingViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private var _viewBinding: FragmentSettingBinding? = null
+    private val viewBinding get() = _viewBinding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _viewBinding = FragmentSettingBinding.inflate(inflater)
+        return viewBinding.root
+
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val currentMode = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
-        binding.switch1.isChecked = currentMode == Configuration.UI_MODE_NIGHT_YES
-        binding.switch1.setOnCheckedChangeListener { _, isChecked ->
+        viewBinding.darkMode.isChecked = currentMode == Configuration.UI_MODE_NIGHT_YES
+        viewBinding.darkMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 viewModel.saveTheme(true)
@@ -37,8 +43,5 @@ class SettingFragment : DefaultFragment<FragmentSettingBinding, NewsViewModel>()
         }
     }
 
-    override fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ) = FragmentSettingBinding.inflate(inflater, container, false)
+
 }

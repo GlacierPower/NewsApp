@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.newsapp.data.model.SourcesNews
 import com.newsapp.databinding.ItemsSourceBinding
+import com.newsapp.presentation.adapters.listener.ISourceListener
 
-class SourceAdapter(private val context: Context) :
+class SourceAdapter(private val listener:ISourceListener) :
     RecyclerView.Adapter<SourceAdapter.NewsViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -63,9 +64,8 @@ class SourceAdapter(private val context: Context) :
                 itemsSourceNewsBinding.executePendingBindings()
 
                 itemsSourceNewsBinding.root.setOnClickListener {
-                    val builder = CustomTabsIntent.Builder()
-                    val customTabsIntent = builder.build()
-                    customTabsIntent.launchUrl(context, Uri.parse(sourceResponse.url))
+                    listener.onSourceClicked(sourceResponse)
+
                 }
 
             }

@@ -28,9 +28,9 @@ class ImageBinding @Inject constructor() {
         @SuppressLint("SimpleDateFormat")
         @BindingAdapter("timeAgoFormat")
         @JvmStatic
-        fun convertToTimeAgoFormat(textView: TextView, time: String) {
+        fun convertToTimeAgoFormat(textView: TextView, time: String?) {
             try {
-                val timeAgo = formatTimeAgo(time)
+                val timeAgo = time?.let { formatTimeAgo(it) }
                 textView.text = timeAgo
             } catch (e: Exception) {
                 e.printStackTrace()

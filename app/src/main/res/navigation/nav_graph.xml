@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/newsFragment"
-        android:name="com.newsapp.presentation.fragments.NewsFragment"
+        android:name="com.newsapp.presentation.views.news.NewsFragment"
         android:label="News"
         tools:layout="@layout/fragment_news" >
         <action
@@ -16,22 +16,26 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.newsapp.presentation.fragments.CategoryFragment"
+        android:name="com.newsapp.presentation.views.category.CategoryFragment"
         android:label="Category"
         tools:layout="@layout/fragment_category" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.newsapp.presentation.fragments.SearchFragment"
+        android:name="com.newsapp.presentation.views.search.SearchFragment"
         android:label="Search"
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/sourceFragment"
-        android:name="com.newsapp.presentation.fragments.SourceFragment"
+        android:name="com.newsapp.presentation.views.source.SourceFragment"
         android:label="Source"
         tools:layout="@layout/fragment_source" />
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.newsapp.presentation.fragments.SettingFragment"
+        android:name="com.newsapp.presentation.views.setting.SettingFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/saveFragment"
+        android:name="com.newsapp.presentation.views.favorite.FavoriteFragment"
+        android:label="SaveFragment" />
 </navigation>
