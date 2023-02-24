@@ -10,7 +10,6 @@ object Constants {
     const val NAME = "NewsApp"
 
     val categories = listOf(
-        "Breaking",
         "Business",
         "Entertainment",
         "Health",

@@ -6,21 +6,25 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.newsapp.data.data_base.NewsEntity
-import com.newsapp.databinding.ItemsNewsBinding
+import com.newsapp.databinding.ItemSavedBinding
 import com.newsapp.presentation.adapters.listener.INewsListener
+import com.newsapp.presentation.adapters.listener.ISaveListener
 
-class NewsAdapter(private val listener: INewsListener) :
-    RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
+class SavedAdapter(private val listener: ISaveListener) :
+    RecyclerView.Adapter<SavedAdapter.SavedViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsAdapter.NewsViewHolder {
-        return NewsViewHolder(
-            ItemsNewsBinding.inflate(
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): SavedAdapter.SavedViewHolder {
+        return SavedViewHolder(
+            ItemSavedBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
-    override fun onBindViewHolder(holder: NewsAdapter.NewsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SavedAdapter.SavedViewHolder, position: Int) {
         val news = differ.currentList[position]
         holder.bind(news)
 
@@ -50,23 +54,24 @@ class NewsAdapter(private val listener: INewsListener) :
         return differ.currentList.size
     }
 
-    inner class NewsViewHolder(private val itemsNewsBinding: ItemsNewsBinding) :
-        RecyclerView.ViewHolder(itemsNewsBinding.root) {
+    inner class SavedViewHolder(
+        private val itemsSavedBinding: ItemSavedBinding,
+    ) :
+        RecyclerView.ViewHolder(itemsSavedBinding.root) {
         fun bind(newsResponse: NewsEntity) {
-            itemsNewsBinding.apply {
-                itemsNewsBinding.news = newsResponse
-                itemsNewsBinding.executePendingBindings()
+            itemsSavedBinding.apply {
+                itemsSavedBinding.saved = newsResponse
+                itemsSavedBinding.executePendingBindings()
 
-                itemsNewsBinding.btnShareNews.setOnClickListener {
+                itemsSavedBinding.btnShareNews.setOnClickListener {
                     listener.onShareClicked(newsResponse)
                 }
 
-                itemsNewsBinding.root.setOnClickListener {
+                itemsSavedBinding.root.setOnClickListener {
                     listener.onItemClicked(newsResponse)
                 }
-
-                itemsNewsBinding.btnSavedNews.setOnClickListener {
-                    
+                itemsSavedBinding.btnDeleteNews.setOnClickListener {
+                    listener.deleteNewsByTitle(newsResponse.title)
                 }
             }
 

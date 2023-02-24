@@ -1,0 +1,11 @@
+package com.newsapp.presentation.adapters.listener
+
+import com.newsapp.data.data_base.NewsEntity
+
+interface ISaveListener {
+    fun onShareClicked(newsResponse: NewsEntity)
+
+    fun onItemClicked(newsResponse: NewsEntity)
+
+    fun deleteNewsByTitle(title:String)
+}

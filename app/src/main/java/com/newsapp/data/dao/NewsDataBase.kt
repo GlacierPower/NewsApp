@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.newsapp.data.data_base.NewsEntity
 
-@Database(entities = [NewsEntity::class], version = 1, exportSchema = false)
+@Database(entities = [NewsEntity::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class NewsDataBase : RoomDatabase() {
 

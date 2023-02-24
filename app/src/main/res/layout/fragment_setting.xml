@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.fragments.SettingFragment">
+    tools:context=".presentation.views.setting.SettingFragment">
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switch1"
+        android:id="@+id/darkMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Switch"

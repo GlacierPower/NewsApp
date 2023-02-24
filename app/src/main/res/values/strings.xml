@@ -18,4 +18,9 @@
     <string name="category_second">#FFFFFF</string>
     <string name="dark_mode">Dark mode</string>
     <string name="profile">Profile</string>
+    <string name="delete_all_news">Delete all news</string>
+    <string name="save">Save</string>
+    <string name="are_you_sure">Are you sure, that you want to delete all saved news?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
