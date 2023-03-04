@@ -23,4 +23,13 @@
     <string name="are_you_sure">Are you sure, that you want to delete all saved news?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="newsapp">NewsApp</string>
+    <string name="by_glacierpower">by GlacierPower</string>
+    <string name="version_1_0_0">version 1.0.0</string>
+    <string name="the_usa">The USA</string>
+    <string name="change_country">Change Country</string>
+    <string name="saved_news">Saved news</string>
+    <string name="swipe_down_to_refresh">Swipe down to refresh</string>
+    <string name="favorite">Favorite</string>
+
 </resources>

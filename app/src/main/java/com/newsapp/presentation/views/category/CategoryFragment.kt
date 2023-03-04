@@ -66,7 +66,7 @@ class CategoryFragment : Fragment(), INewsListener {
                     newsAdapter.differ.submitList(response.data!!.articles)
                 }
                 is Resources.Error -> {
-                    tryAgainStatus(true, response.message!!)
+                    tryAgainStatus(true)
                     progressBarStatus(false)
                 }
                 is Resources.Loading -> {
@@ -75,13 +75,20 @@ class CategoryFragment : Fragment(), INewsListener {
                 }
             }
         })
+        viewBinding.newsLayout.setOnRefreshListener {
+            categoryAdapter.onItemClickListener { news ->
+                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                    viewModel.getBreakingNews(news)
+                }
+                viewBinding.newsLayout.isRefreshing = false
+            }
+        }
 
     }
 
 
-    private fun tryAgainStatus(status: Boolean, message: String = "message") {
+    private fun tryAgainStatus(status: Boolean) {
         if (status) {
-            viewBinding.tryMessage.text = message
             viewBinding.tryAgainLayout.visibility = View.VISIBLE
         } else {
             viewBinding.tryAgainLayout.visibility = View.GONE

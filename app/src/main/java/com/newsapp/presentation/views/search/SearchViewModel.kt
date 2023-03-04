@@ -42,11 +42,11 @@ class SearchViewModel @Inject constructor(
                     _news.postValue(Resources.Error(Constants.NO_CONNECTION))
                     toast(getApplication(), Constants.NO_CONNECTION)
                 }
-            } catch (throwable: Throwable) {
-                when (throwable) {
+            } catch (exception: Exception) {
+                when (exception) {
 
-                    is IOException -> _news.postValue(Resources.Error(throwable.message!!))
-                    else -> _news.postValue(Resources.Error(throwable.message!!))
+                    is IOException -> _news.postValue(Resources.Error(exception.message!!))
+                    else -> toast(getApplication(), Constants.ERROR)
                 }
             }
         }

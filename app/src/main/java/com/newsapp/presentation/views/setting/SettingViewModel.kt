@@ -17,8 +17,6 @@ class SettingViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
     private val store = DataStore(application)
-    val getTheme = store.uiMode
-
     fun saveTheme(isDarkMode: Boolean) {
         viewModelScope.launch {
             try {

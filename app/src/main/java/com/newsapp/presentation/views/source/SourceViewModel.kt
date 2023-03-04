@@ -41,10 +41,11 @@ class SourceViewModel @Inject constructor(
             } catch (throwable: Throwable) {
                 when (throwable) {
                     is IOException -> _source.postValue(Resources.Error(throwable.message!!))
-                    else -> _source.postValue(Resources.Error(throwable.message!!))
+                    else -> toast(getApplication(), Constants.ERROR)
                 }
             }
         }
+
     }
 
     private fun sourceResponse(response: Response<SourceResponse>): Resources<SourceResponse>? {

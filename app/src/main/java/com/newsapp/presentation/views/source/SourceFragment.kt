@@ -53,23 +53,40 @@ class SourceFragment : Fragment(), ISourceListener {
                 when (response) {
                     is Resources.Success -> {
                         progressBar(false)
+                        tryAgain(false)
                         sourceAdapter.differ.submitList(response.data!!.sources)
                         viewBinding.sourceRecycler.adapter = sourceAdapter
                     }
                     is Resources.Error -> {
+                        tryAgain(true)
                         progressBar(false)
                     }
                     is Resources.Loading -> {
+                        tryAgain(false)
                         progressBar(true)
                     }
                 }
             })
+            viewBinding.newsLayout.setOnRefreshListener {
+                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                    viewModel.getSourceNews()
+                    viewBinding.newsLayout.isRefreshing = false
+                }
+            }
         }
     }
 
     private fun progressBar(status: Boolean) {
         viewBinding.progressBar.visibility = if (status) View.VISIBLE else View.GONE
 
+    }
+
+    private fun tryAgain(status: Boolean) {
+        if (status) {
+            viewBinding.tryAgainLayout.visibility = View.VISIBLE
+        } else {
+            viewBinding.tryAgainLayout.visibility = View.GONE
+        }
     }
 
 

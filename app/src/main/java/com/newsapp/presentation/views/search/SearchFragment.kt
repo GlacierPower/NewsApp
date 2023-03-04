@@ -60,7 +60,7 @@ class SearchFragment : Fragment(), INewsListener {
             job = MainScope().launch {
                 delay(DELAY)
                 edit?.let {
-                    if (edit.toString().isNotEmpty()) {
+                    if (edit.toString().isNotEmpty() && edit.toString().length > 3) {
                         viewModel.getSearchNews(edit.toString())
                     }
                 }

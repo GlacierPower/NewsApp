@@ -45,6 +45,9 @@ class NewsFragment : Fragment(), INewsListener {
             val isChecked = viewModel.getTheme.first()
             setTheme(isChecked)
         }
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.getNews()
+        }
 
         newsAdapter = NewsAdapter(this)
         viewBinding.newsRecycler.apply {
@@ -60,7 +63,7 @@ class NewsFragment : Fragment(), INewsListener {
                             newsAdapter.differ.submitList(responce.data!!.articles)
                         }
                         is Resources.Error -> {
-                            tryAgain(true, responce.message!!)
+                            tryAgain(true)
                             progressBar(false)
                         }
                         is Resources.Loading -> {
@@ -80,10 +83,8 @@ class NewsFragment : Fragment(), INewsListener {
         }
     }
 
-    private fun tryAgain(status: Boolean, message: String = "message") {
+    private fun tryAgain(status: Boolean) {
         if (status) {
-
-            viewBinding.message.text = message
             viewBinding.tryAgainLayout.visibility = View.VISIBLE
         } else {
             viewBinding.tryAgainLayout.visibility = View.GONE
