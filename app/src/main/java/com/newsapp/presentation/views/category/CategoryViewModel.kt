@@ -46,7 +46,7 @@ class CategoryViewModel @Inject constructor(
             } catch (exception: Exception) {
                 when (exception) {
                     is IOException -> _news.postValue(Resources.Error(exception.message!!))
-                    else -> Log.e("Error", exception.toString())
+                    else -> toast(getApplication(), Constants.ERROR)
                 }
 
             }

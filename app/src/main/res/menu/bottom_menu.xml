@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/newsFragment"
         android:icon="@drawable/news"
-        android:title="@string/news" />
+        android:title="@string/news"
+        app:exb_color="@color/light_blue"/>
 
     <item
         android:id="@+id/categoryFragment"
         android:icon="@drawable/list"
-        android:title="@string/category" />
+        android:title="@string/category"
+        app:exb_color="@color/light_blue"/>
 
     <item
         android:id="@+id/sourceFragment"
         android:icon="@drawable/source"
-        android:title="@string/source" />
+        android:title="@string/source"
+        app:exb_color="@color/light_blue"/>
 
     <item
         android:id="@+id/settingFragment"
         android:icon="@drawable/person"
-        android:title="@string/profile" />
+        android:title="@string/profile"
+        app:exb_color="@color/light_blue"/>
 </menu>

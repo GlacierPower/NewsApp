@@ -20,7 +20,7 @@
             android:id="@+id/newsImage"
             urlToImage="@{news.urlToImage}"
             android:layout_width="390dp"
-            android:background="@drawable/news_background"
+            android:background="@drawable/news_back"
             android:layout_height="220dp"
             android:layout_marginTop="10dp"
             android:scaleType="center"
@@ -97,7 +97,7 @@
             android:id="@+id/border"
             android:layout_width="390dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/colorPrimaryDark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

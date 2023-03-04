@@ -10,10 +10,7 @@ import com.newsapp.App
 import com.newsapp.data.model.NewsResponse
 import com.newsapp.data.sharedpreferences.DataStore
 import com.newsapp.domain.NewsInteractor
-import com.newsapp.util.Constants
-import com.newsapp.util.Resources
-import com.newsapp.util.hasInternetConnection
-import com.newsapp.util.newsResponse
+import com.newsapp.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -33,8 +30,7 @@ class NewsViewModels @Inject constructor(
 
     init {
         viewModelScope.launch {
-
-            getNews()
+            //getNews()
         }
 
     }
@@ -48,11 +44,12 @@ class NewsViewModels @Inject constructor(
                 _news.postValue(newsResponse(response)!!)
             } else {
                 _news.postValue(Resources.Error(Constants.NO_CONNECTION))
+                toast(getApplication(), Constants.NO_CONNECTION)
             }
         } catch (exception: Exception) {
             when (exception) {
                 is IOException -> _news.postValue(Resources.Error(exception.message!!))
-                else -> Log.e("Error", exception.toString())
+                else -> toast(getApplication(), Constants.ERROR)
             }
         }
 

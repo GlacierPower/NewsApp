@@ -4,11 +4,13 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 
+
 }
 
 android {
     namespace 'com.newsapp'
     compileSdk 33
+
 
     defaultConfig {
         applicationId "com.newsapp"
@@ -17,6 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
+
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -58,6 +61,7 @@ dependencies {
 
     implementation "androidx.fragment:fragment-ktx:1.5.2"
     implementation "androidx.navigation:navigation-compose:2.5.1"
+
 
     // Hilt
     kapt 'com.google.dagger:hilt-android-compiler:2.43.2'
@@ -124,4 +128,14 @@ dependencies {
 
     //webview
     implementation "androidx.browser:browser:1.3.0"
+
+    //Expandable Bottom bar
+    implementation 'com.github.st235:expandablebottombar:1.5.1'
+
+    //Country Picker
+    implementation 'com.github.mukeshsolanki:country-picker-android:2.0.4'
+
+    //lottie
+    implementation "com.airbnb.android:lottie:3.4.0"
+
 }
