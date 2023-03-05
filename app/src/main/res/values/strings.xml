@@ -31,5 +31,6 @@
     <string name="saved_news">Saved news</string>
     <string name="swipe_down_to_refresh">Swipe down to refresh</string>
     <string name="favorite">Favorite</string>
+    <string name="delete_from_favorite">News was deleted from Favorite</string>
 
 </resources>

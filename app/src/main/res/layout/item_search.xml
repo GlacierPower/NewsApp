@@ -6,13 +6,13 @@
     <data>
 
         <variable
-            name="saved"
-            type="com.newsapp.data.data_base.FavoriteEntity" />
+            name="news"
+            type="com.newsapp.data.data_base.NewsEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="330dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
@@ -20,7 +20,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/newsImage"
-            urlToImage="@{saved.urlToImage}"
+            urlToImage="@{news.urlToImage}"
             android:layout_width="390dp"
             android:layout_height="220dp"
             android:layout_marginTop="10dp"
@@ -30,21 +30,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/newsTitle"
-            android:layout_width="350dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:ellipsize="end"
-            android:text="@{saved.title}"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-
-            app:layout_constraintTop_toBottomOf="@+id/newsImage" />
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/newsName"
             android:layout_width="150dp"
@@ -53,15 +38,29 @@
             android:layout_marginTop="15dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{saved.source.name}"
+            android:text="@{news.source.name}"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/newsTitle"
             tools:text="Source" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/newsTitle"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:text="@{news.title}"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.484"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/newsImage" />
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/newsDateTime"
-            timeAgoFormat="@{saved.publishedAt}"
+            timeAgoFormat="@{news.publishedAt}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
@@ -69,21 +68,8 @@
             android:maxLines="1"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/newsName"
-            app:layout_constraintTop_toBottomOf="@+id/newsTitle"
-            tools:text=" 5 hours ago" />
+            app:layout_constraintTop_toBottomOf="@+id/newsTitle" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btn_delete_news"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="11dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/delete"
-            app:layout_constraintStart_toEndOf="@+id/newsDateTime"
-            app:layout_constraintTop_toBottomOf="@+id/newsTitle">
-
-        </androidx.appcompat.widget.AppCompatImageButton>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_share_news"
@@ -93,9 +79,22 @@
             android:layout_marginTop="11dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/share"
-            app:layout_constraintStart_toEndOf="@+id/btn_delete_news"
-            app:layout_constraintTop_toBottomOf="@+id/newsTitle" />
+            app:layout_constraintStart_toEndOf="@+id/btn_saved_news"
+            app:layout_constraintTop_toBottomOf="@+id/newsTitle"></androidx.appcompat.widget.AppCompatImageButton>
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_saved_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="11dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:shadowColor="@color/black"
+            android:src="@drawable/bookmarks"
+            app:layout_constraintStart_toEndOf="@+id/newsDateTime"
+            app:layout_constraintTop_toBottomOf="@+id/newsTitle">
+
+        </androidx.appcompat.widget.AppCompatImageButton>
         <View
             android:id="@+id/border"
             android:layout_width="390dp"

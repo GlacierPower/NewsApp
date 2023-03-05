@@ -119,48 +119,5 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/choose_country"
-            style="@style/Stroke_MaterialCardView"
-            android:layout_width="360dp"
-            android:layout_height="65dp"
-            android:layout_marginTop="1dp"
-            android:orientation="horizontal"
-            app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="start|center"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/location" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                android:layout_margin="10dp"
-                android:paddingStart="60dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/change_country"
-                android:textSize="23sp" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_selectedCountry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center"
-                android:layout_margin="10dp"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="5dp"
-                android:text="@string/the_usa"
-                android:textSize="20sp" />
-        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentNewsBinding
 import com.newsapp.presentation.adapters.NewsAdapter
 import com.newsapp.presentation.adapters.listener.INewsListener
+import com.newsapp.util.Constants.FAVORITE
 import com.newsapp.util.Resources
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -40,6 +42,7 @@ class NewsFragment : Fragment(), INewsListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         lifecycleScope.launchWhenResumed {
             val isChecked = viewModel.getTheme.first()
@@ -81,6 +84,10 @@ class NewsFragment : Fragment(), INewsListener {
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewModel.insertData()
+        }
     }
 
     private fun tryAgain(status: Boolean) {
@@ -120,6 +127,12 @@ class NewsFragment : Fragment(), INewsListener {
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(requireContext(), Uri.parse(newsResponse.url))
+    }
+
+    override fun onFavClicked(title: String) {
+        viewModel.onFavClicked(title)
+        Toast.makeText(context, FAVORITE, Toast.LENGTH_LONG).show()
+
     }
 
 }

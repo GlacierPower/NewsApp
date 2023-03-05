@@ -15,8 +15,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentSearchBinding
-import com.newsapp.presentation.adapters.NewsAdapter
-import com.newsapp.presentation.adapters.listener.INewsListener
+import com.newsapp.presentation.adapters.SearchAdapter
+import com.newsapp.presentation.adapters.listener.ISearchListener
+import com.newsapp.util.Constants
 import com.newsapp.util.Constants.DELAY
 import com.newsapp.util.Constants.ERROR
 import com.newsapp.util.Constants.PAGE_SIZE
@@ -28,14 +29,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(), INewsListener {
+class SearchFragment : Fragment(), ISearchListener {
 
     private val viewModel: SearchViewModel by viewModels()
 
     private var _viewBinding: FragmentSearchBinding? = null
     private val viewBinding get() = _viewBinding!!
 
-    lateinit var newsAdapter: NewsAdapter
+    lateinit var searchAdapter: SearchAdapter
     var job: Job? = null
 
     override fun onCreateView(
@@ -51,9 +52,9 @@ class SearchFragment : Fragment(), INewsListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        newsAdapter = NewsAdapter(this)
+        searchAdapter = SearchAdapter(this)
         viewBinding.searchRecycler.apply {
-            adapter = newsAdapter
+            adapter = searchAdapter
         }
         viewBinding.search.addTextChangedListener { edit ->
             job?.cancel()
@@ -62,6 +63,7 @@ class SearchFragment : Fragment(), INewsListener {
                 edit?.let {
                     if (edit.toString().isNotEmpty() && edit.toString().length > 3) {
                         viewModel.getSearchNews(edit.toString())
+                        viewModel.insertSearchNews(edit.toString())
                     }
                 }
             }
@@ -71,7 +73,7 @@ class SearchFragment : Fragment(), INewsListener {
                 is Resources.Success -> {
                     hideProgressBar()
                     response.data.let { searchResponse ->
-                        newsAdapter.differ.submitList(searchResponse?.articles?.toList())
+                        searchAdapter.differ.submitList(searchResponse?.articles?.toList())
                         val totalResult = searchResponse!!.totalResults / PAGE_SIZE + 2
                         lastPage = viewModel.searchPage == totalResult
                         if (lastPage) {
@@ -120,4 +122,10 @@ class SearchFragment : Fragment(), INewsListener {
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(requireContext(), Uri.parse(newsResponse.url))
     }
+
+    override fun onFavClicked(title: String) {
+        viewModel.onFavClicked(title)
+        Toast.makeText(context, Constants.FAVORITE, Toast.LENGTH_LONG).show()
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.newsapp.data.dao
 
 import androidx.room.*
+import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.data.data_base.NewsEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,16 +17,19 @@ interface NewsDao {
     @Query("SELECT * FROM newsEntity")
     fun getNewsEntities(): Flow<List<NewsEntity>>
 
-    @Query("SELECT * FROM newsEntity ORDER BY id DESC")
-    fun getAllNews(): Flow<List<NewsEntity>>
-
-    @Query("SELECT * FROM newsEntity WHERE title= :q")
-    suspend fun getNewsByTitle(q: String): NewsEntity
-
-    @Query("DELETE FROM newsEntity")
+    @Query("DELETE FROM favoriteEntity")
     suspend fun deleteAllNews()
 
-    @Query("DELETE FROM newsEntity WHERE title =:title")
-    suspend fun deleteItemEntityByDescription(title: String)
+    @Query("DELETE FROM favoriteEntity WHERE title =:title")
+    suspend fun deleteNewsByTitle(title: String)
+
+    @Query("SELECT * FROM newsEntity WHERE title =:title")
+    fun findNewsByTitle(title: String): NewsEntity
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE) // ignore when conflict occurs (ignore items if same)
+    fun insertFavoritesEntity(favoriteEntity: FavoriteEntity)
+
+    @Query("SELECT * FROM favoriteEntity")
+    fun getFavoriteEntities(): Flow<List<FavoriteEntity>>
 
 }

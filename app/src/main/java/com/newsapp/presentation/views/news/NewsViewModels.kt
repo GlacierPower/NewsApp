@@ -28,32 +28,49 @@ class NewsViewModels @Inject constructor(
     private var _temp = MutableLiveData<Resources<NewsResponse>>()
     val temp: LiveData<Resources<NewsResponse>> get() = _temp
 
-    init {
+    fun onFavClicked(title: String) {
         viewModelScope.launch {
-            //getNews()
+            try {
+                newsInteractor.insertToFavorite(title)
+            } catch (e: Exception) {
+                Log.w("News fav clicked", e.message.toString())
+            }
+
+        }
+    }
+
+    fun insertData() {
+        viewModelScope.launch {
+            try {
+                newsInteractor.insertData()
+            } catch (e: Exception) {
+                Log.w("Insert data", e.message.toString())
+            }
         }
 
     }
 
-    suspend fun getNews() {
+    fun getNews() {
         _news.postValue(Resources.Loading())
-        try {
-            if (hasInternetConnection<App>()) {
-                val response = newsInteractor.getNews()
-                _temp.postValue(Resources.Success(response.body()!!))
-                _news.postValue(newsResponse(response)!!)
-            } else {
-                _news.postValue(Resources.Error(Constants.NO_CONNECTION))
-                toast(getApplication(), Constants.NO_CONNECTION)
-            }
-        } catch (exception: Exception) {
-            when (exception) {
-                is IOException -> _news.postValue(Resources.Error(exception.message!!))
-                else -> toast(getApplication(), Constants.ERROR)
+        viewModelScope.launch {
+            try {
+                if (hasInternetConnection<App>()) {
+                    val response = newsInteractor.getNews()
+                    _temp.postValue(Resources.Success(response.body()!!))
+                    _news.postValue(newsResponse(response)!!)
+                } else {
+                    _news.postValue(Resources.Error(Constants.NO_CONNECTION))
+                    toast(getApplication(), Constants.NO_CONNECTION)
+                }
+            } catch (exception: Exception) {
+                when (exception) {
+                    is IOException -> _news.postValue(Resources.Error(exception.message!!))
+                    else -> toast(getApplication(), Constants.ERROR)
+                }
             }
         }
-
     }
+
     private val store = DataStore(application)
     val getTheme = store.uiMode
 

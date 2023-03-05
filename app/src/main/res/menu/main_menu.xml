@@ -3,11 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/saveMenuItem"
-        android:icon="@drawable/save"
-        android:title="@string/save"
-        app:showAsAction="ifRoom|collapseActionView" />
-    <item
         android:id="@+id/deleteAllNews"
         android:icon="@drawable/delete"
         android:title="@string/delete_all_news"

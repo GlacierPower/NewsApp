@@ -40,7 +40,7 @@
     <fragment
         android:id="@+id/saveFragment"
         android:name="com.newsapp.presentation.views.favorite.FavoriteFragment"
-        android:label="SaveFragment" />
+        android:label="Favorite" />
     <dialog
         android:id="@+id/bottom_sheet_parent"
         android:label="@string/newsapp"/>

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.ItemSavedBinding
 import com.newsapp.presentation.adapters.listener.INewsListener
@@ -31,17 +32,17 @@ class SavedAdapter(private val listener: ISaveListener) :
     }
 
     private val differCallback =
-        object : DiffUtil.ItemCallback<NewsEntity>() {
+        object : DiffUtil.ItemCallback<FavoriteEntity>() {
             override fun areItemsTheSame(
-                oldItem: NewsEntity,
-                newItem: NewsEntity
+                oldItem: FavoriteEntity,
+                newItem: FavoriteEntity
             ): Boolean {
                 return oldItem.url == newItem.url
             }
 
             override fun areContentsTheSame(
-                oldItem: NewsEntity,
-                newItem: NewsEntity
+                oldItem: FavoriteEntity,
+                newItem: FavoriteEntity
             ): Boolean {
                 return oldItem == newItem
             }
@@ -58,7 +59,7 @@ class SavedAdapter(private val listener: ISaveListener) :
         private val itemsSavedBinding: ItemSavedBinding,
     ) :
         RecyclerView.ViewHolder(itemsSavedBinding.root) {
-        fun bind(newsResponse: NewsEntity) {
+        fun bind(newsResponse: FavoriteEntity) {
             itemsSavedBinding.apply {
                 itemsSavedBinding.saved = newsResponse
                 itemsSavedBinding.executePendingBindings()
