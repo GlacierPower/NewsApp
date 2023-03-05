@@ -32,7 +32,29 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
-    suspend fun getBreakingNews(category: String = Constants.categories.first()) {
+    fun onFavClicked(title: String) {
+        viewModelScope.launch {
+            try {
+                newsInteractor.insertToFavorite(title)
+            } catch (e: Exception) {
+                Log.w("Insert to Favorite", e.message.toString())
+            }
+
+        }
+    }
+
+    fun insertCategory(category: String = Constants.categories.first()) {
+        viewModelScope.launch {
+            try {
+                newsInteractor.insertCategory(category, breakingNews)
+            } catch (e: Exception) {
+                Log.w("InsertCategory", e.message.toString())
+            }
+
+        }
+    }
+
+    fun getBreakingNews(category: String = Constants.categories.first()) {
         _news.postValue(Resources.Loading())
         viewModelScope.launch {
             try {

@@ -6,21 +6,24 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.newsapp.data.data_base.NewsEntity
-import com.newsapp.databinding.ItemsNewsBinding
-import com.newsapp.presentation.adapters.listener.INewsListener
+import com.newsapp.databinding.ItemSearchBinding
+import com.newsapp.presentation.adapters.listener.ISearchListener
 
-class NewsAdapter(private val listener: INewsListener) :
-    RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
+class SearchAdapter(private val listener: ISearchListener) :
+    RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsAdapter.NewsViewHolder {
-        return NewsViewHolder(
-            ItemsNewsBinding.inflate(
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): SearchAdapter.SearchViewHolder {
+        return SearchViewHolder(
+            ItemSearchBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
-    override fun onBindViewHolder(holder: NewsAdapter.NewsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchAdapter.SearchViewHolder, position: Int) {
         val news = differ.currentList[position]
         holder.bind(news)
 
@@ -50,24 +53,24 @@ class NewsAdapter(private val listener: INewsListener) :
         return differ.currentList.size
     }
 
-    inner class NewsViewHolder(private val itemsNewsBinding: ItemsNewsBinding) :
-        RecyclerView.ViewHolder(itemsNewsBinding.root) {
+    inner class SearchViewHolder(private val itemSearchBinding: ItemSearchBinding) :
+        RecyclerView.ViewHolder(itemSearchBinding.root) {
         fun bind(newsResponse: NewsEntity) {
-            itemsNewsBinding.apply {
-                itemsNewsBinding.news = newsResponse
-                itemsNewsBinding.executePendingBindings()
+            itemSearchBinding.apply {
+                itemSearchBinding.news = newsResponse
+                itemSearchBinding.executePendingBindings()
 
-                itemsNewsBinding.btnShareNews.setOnClickListener {
+                itemSearchBinding.btnShareNews.setOnClickListener {
                     listener.onShareClicked(newsResponse)
                 }
 
-                itemsNewsBinding.root.setOnClickListener {
+                itemSearchBinding.root.setOnClickListener {
                     listener.onItemClicked(newsResponse)
                 }
-
-                itemsNewsBinding.btnSavedNews.setOnClickListener {
+                itemSearchBinding.btnSavedNews.setOnClickListener {
                     listener.onFavClicked(newsResponse.title)
                 }
+
             }
 
         }

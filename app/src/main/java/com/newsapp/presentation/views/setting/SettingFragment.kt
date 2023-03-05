@@ -8,10 +8,9 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.newsapp.R
 import com.newsapp.databinding.FragmentSettingBinding
-import com.newsapp.presentation.views.favorite.FavoriteFragment
-import com.newsapp.presentation.views.search.SearchFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,29 +44,13 @@ class SettingFragment : Fragment() {
             }
         }
         viewBinding.favorite.setOnClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.nav_host_fragment, FavoriteFragment())
-                .commit()
+            findNavController().navigate(R.id.action_settingFragment_to_saveFragment)
         }
         viewBinding.search.setOnClickListener {
-            parentFragmentManager
-                .beginTransaction()
-                .replace(R.id.nav_host_fragment, SearchFragment())
-                .commit()
-        }
+            findNavController().navigate(R.id.action_settingFragment_to_searchFragment)
 
-    }
-
-    private fun setTheme(isChecked: Boolean) {
-        if (isChecked) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            viewModel.saveTheme(true)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            viewModel.saveTheme(false)
         }
     }
-
-
 }
+
+

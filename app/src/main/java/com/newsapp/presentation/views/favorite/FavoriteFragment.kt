@@ -9,12 +9,15 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.newsapp.R
-import com.newsapp.data.data_base.NewsEntity
+import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.databinding.FragmentSaveBinding
+import com.newsapp.presentation.adapters.CategoryAdapter
 import com.newsapp.presentation.adapters.SavedAdapter
 import com.newsapp.presentation.adapters.listener.ISaveListener
+import com.newsapp.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
 
@@ -27,6 +30,8 @@ class FavoriteFragment : Fragment(), ISaveListener {
     private val viewBinding get() = _viewBinding!!
 
     private lateinit var savedAdapter: SavedAdapter
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,19 +51,21 @@ class FavoriteFragment : Fragment(), ISaveListener {
             adapter = savedAdapter
         }
 
+
+
+
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.items.catch {
+            viewModel.news.catch {
                 Toast.makeText(context, it.message.toString(), Toast.LENGTH_SHORT).show()
             }.collect { flowList ->
                 flowList.collect { list ->
-                    list.toMutableList()
                     savedAdapter.differ.submitList(list)
                 }
             }
         }
 
-    }
 
+    }
     private fun deleteAlert() =
         MaterialAlertDialogBuilder(requireContext())
             .setIcon(R.drawable.delete)
@@ -74,7 +81,7 @@ class FavoriteFragment : Fragment(), ISaveListener {
             .show()
 
 
-    override fun onShareClicked(newsResponse: NewsEntity) {
+    override fun onShareClicked(newsResponse: FavoriteEntity) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, newsResponse.url)
@@ -85,7 +92,7 @@ class FavoriteFragment : Fragment(), ISaveListener {
         context?.startActivity(shareIntent)
     }
 
-    override fun onItemClicked(newsResponse: NewsEntity) {
+    override fun onItemClicked(newsResponse: FavoriteEntity) {
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(requireContext(), Uri.parse(newsResponse.url))
@@ -93,6 +100,7 @@ class FavoriteFragment : Fragment(), ISaveListener {
 
     override fun deleteNewsByTitle(title: String) {
         viewModel.deleteNews(title)
+        Toast.makeText(context,getString(R.string.delete_from_favorite), Toast.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -104,12 +112,6 @@ class FavoriteFragment : Fragment(), ISaveListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.saveMenuItem -> {
-                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                    viewModel.getData()
-                }
-
-            }
             R.id.deleteAllNews -> {
                 deleteAlert()
             }

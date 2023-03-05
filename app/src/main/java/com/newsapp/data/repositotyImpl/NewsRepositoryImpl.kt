@@ -1,6 +1,7 @@
 package com.newsapp.data.repositotyImpl
 
 import com.newsapp.data.dao.NewsDao
+import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.data.model.NewsResponse
 import com.newsapp.data.model.SourceResponse
@@ -40,45 +41,113 @@ class NewsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getData() {
+    override suspend fun insertData() {
         withContext(Dispatchers.IO) {
-            newsDao.doesNewsEntityExist().collect {
-                if (!it) {
-                    val response = apiService.getNews()
-                    response.body()?.articles.let { listNews ->
-                        listNews?.map { news ->
-                            val newsEntity = NewsEntity(
-                                news.id,
-                                news.source,
-                                news.author,
-                                news.title,
-                                news.description,
-                                news.url,
-                                news.urlToImage,
-                                news.publishedAt,
-                                news.content
-                            )
-                            newsDao.insertToNewsEntity(newsEntity)
-                        }
-                    }
+            val response = apiService.getNews()
+            response.body()?.articles.let { listNews ->
+                listNews?.map { news ->
+                    val newsEntity = NewsEntity(
+                        news.id,
+                        news.source,
+                        news.author,
+                        news.title,
+                        news.description,
+                        news.url,
+                        news.urlToImage,
+                        news.publishedAt,
+                        news.content
+                    )
+                    newsDao.insertToNewsEntity(newsEntity)
                 }
             }
         }
     }
 
-    override suspend fun showData(): Flow<List<NewsEntity>> {
-        return withContext(Dispatchers.IO) {
-            newsDao.getNewsEntities()
+    override suspend fun insertCategory(category: String, page: Int) {
+        withContext(Dispatchers.IO) {
+            val response = apiService.getNewsByCategory(category = category, page = page)
+            response.body()?.articles.let { listNews ->
+                listNews?.map { news ->
+                    val newsEntity = NewsEntity(
+                        news.id,
+                        news.source,
+                        news.author,
+                        news.title,
+                        news.description,
+                        news.url,
+                        news.urlToImage,
+                        news.publishedAt,
+                        news.content
+                    )
+                    newsDao.insertToNewsEntity(newsEntity)
+                }
+            }
         }
     }
 
+    override suspend fun insertSearchNews(query: String, page: Int) {
+        withContext(Dispatchers.IO) {
+            val response = apiService.getSearchNews(query, page)
+            response.body()?.articles.let { listNews ->
+                listNews?.map { news ->
+                    val newsEntity = NewsEntity(
+                        news.id,
+                        news.source,
+                        news.author,
+                        news.title,
+                        news.description,
+                        news.url,
+                        news.urlToImage,
+                        news.publishedAt,
+                        news.content
+                    )
+                    newsDao.insertToNewsEntity(newsEntity)
+                }
+            }
+        }
+    }
+
+
     override suspend fun deleteNewsByTitle(title: String) {
         return withContext(Dispatchers.IO) {
-            newsDao.deleteItemEntityByDescription(title)
+            newsDao.deleteNewsByTitle(title)
         }
     }
 
     override suspend fun deleteAllNews() {
-        newsDao.deleteAllNews()
+        return withContext(Dispatchers.IO){
+            newsDao.deleteAllNews()
+        }
     }
+
+    override suspend fun findNewsByTitle(title: String): NewsEntity {
+        return withContext(Dispatchers.IO) {
+            newsDao.findNewsByTitle(title)
+        }
+    }
+
+    override suspend fun insertToFavorite(newsEntity: NewsEntity) {
+        return withContext(Dispatchers.IO) {
+            newsDao.insertFavoritesEntity(
+                FavoriteEntity(
+                    newsEntity.id,
+                    newsEntity.source,
+                    newsEntity.author,
+                    newsEntity.title,
+                    newsEntity.description,
+                    newsEntity.url,
+                    newsEntity.urlToImage,
+                    newsEntity.publishedAt,
+                    newsEntity.content
+                )
+            )
+        }
+    }
+
+    override suspend fun getFavorite(): Flow<List<FavoriteEntity>> {
+        return withContext(Dispatchers.IO) {
+            newsDao.getFavoriteEntities()
+        }
+    }
+
 }

@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentCategoryBinding
 import com.newsapp.presentation.adapters.CategoryAdapter
@@ -19,6 +21,7 @@ import com.newsapp.presentation.adapters.listener.INewsListener
 import com.newsapp.util.Constants
 import com.newsapp.util.Resources
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CategoryFragment : Fragment(), INewsListener {
@@ -48,12 +51,6 @@ class CategoryFragment : Fragment(), INewsListener {
         }
 
         categoryAdapter = CategoryAdapter(Constants.categories)
-        categoryAdapter.onItemClickListener { news ->
-            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                viewModel.getBreakingNews(news)
-            }
-        }
-
         viewBinding.categoriesRecycler.apply {
             adapter = categoryAdapter
         }
@@ -75,14 +72,13 @@ class CategoryFragment : Fragment(), INewsListener {
                 }
             }
         })
-        viewBinding.newsLayout.setOnRefreshListener {
-            categoryAdapter.onItemClickListener { news ->
-                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                    viewModel.getBreakingNews(news)
-                }
-                viewBinding.newsLayout.isRefreshing = false
+        categoryAdapter.onItemClickListener { news ->
+            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+                viewModel.getBreakingNews(news)
+                viewModel.insertCategory(news)
             }
         }
+
 
     }
 
@@ -116,5 +112,10 @@ class CategoryFragment : Fragment(), INewsListener {
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
         customTabsIntent.launchUrl(requireContext(), Uri.parse(newsResponse.url))
+    }
+
+    override fun onFavClicked(title: String) {
+        viewModel.onFavClicked(title)
+        Toast.makeText(context, Constants.FAVORITE, Toast.LENGTH_LONG).show()
     }
 }

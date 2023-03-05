@@ -1,9 +1,10 @@
 package com.newsapp.presentation.views.favorite
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.newsapp.data.data_base.NewsEntity
+import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.domain.NewsInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -17,23 +18,31 @@ class FavoriteViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    val items = flow<Flow<List<NewsEntity>>> {
-        emit(newsInteractor.showData())
+    val news = flow<Flow<List<FavoriteEntity>>> {
+        emit(newsInteractor.getFavorite())
     }
-
 
     fun deleteNews(title: String) {
         viewModelScope.launch {
-            newsInteractor.deleteNewsByTitle(title)
+            try {
+                newsInteractor.deleteNewsByTitle(title)
+            } catch (e: Exception) {
+                Log.w("Delete news", e.message.toString())
+            }
+
         }
 
     }
 
-    suspend fun getData() {
-        newsInteractor.getData()
-    }
 
-    suspend fun deleteAllNews() {
-        newsInteractor.deleteAllNews()
+    fun deleteAllNews() {
+        viewModelScope.launch {
+            try {
+                newsInteractor.deleteAllNews()
+            } catch (e: Exception) {
+                Log.w("Delete All News", e.message.toString())
+            }
+
+        }
     }
 }

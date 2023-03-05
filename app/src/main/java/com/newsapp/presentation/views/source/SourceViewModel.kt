@@ -27,7 +27,7 @@ class SourceViewModel @Inject constructor(
     private var _source = MutableLiveData<Resources<SourceResponse>>()
     val source: LiveData<Resources<SourceResponse>> get() = _source
 
-    suspend fun getSourceNews() {
+     fun getSourceNews() {
         _source.postValue(Resources.Loading())
         viewModelScope.launch {
             try {

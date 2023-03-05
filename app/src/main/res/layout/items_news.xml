@@ -2,7 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="news"
             type="com.newsapp.data.data_base.NewsEntity" />
@@ -10,19 +12,19 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_height="330dp"
         android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_height="330dp">
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/newsImage"
             urlToImage="@{news.urlToImage}"
             android:layout_width="390dp"
-            android:background="@drawable/news_back"
             android:layout_height="220dp"
             android:layout_marginTop="10dp"
+            android:background="@drawable/news_back"
             android:scaleType="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +32,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/newsName"
-            android:layout_width="200dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
@@ -61,24 +63,24 @@
             timeAgoFormat="@{news.publishedAt}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
             android:maxLines="1"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/newsTitle"
-            tools:text=" 5 hours ago" />
+            app:layout_constraintStart_toEndOf="@+id/newsName"
+            app:layout_constraintTop_toBottomOf="@+id/newsTitle" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_saved_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="11dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:shadowColor="@color/black"
             android:src="@drawable/bookmarks"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_share_news">
+            app:layout_constraintStart_toEndOf="@+id/newsDateTime"
+            app:layout_constraintTop_toBottomOf="@+id/newsTitle">
 
         </androidx.appcompat.widget.AppCompatImageButton>
 
@@ -86,13 +88,15 @@
             android:id="@+id/btn_share_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="11dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/share"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toEndOf="@+id/btn_saved_news"
+            app:layout_constraintTop_toBottomOf="@+id/newsTitle">
+
         </androidx.appcompat.widget.AppCompatImageButton>
+
         <View
             android:id="@+id/border"
             android:layout_width="390dp"

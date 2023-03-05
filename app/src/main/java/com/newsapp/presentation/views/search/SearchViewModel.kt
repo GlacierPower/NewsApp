@@ -1,6 +1,7 @@
 package com.newsapp.presentation.views.search
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,8 +31,29 @@ class SearchViewModel @Inject constructor(
     var searchPage = 1
     var searchResponse: NewsResponse? = null
 
+    fun onFavClicked(title: String) {
+        viewModelScope.launch {
+            try {
+                newsInteractor.insertToFavorite(title)
+            } catch (e: Exception) {
+                Log.w("Search fav clicked", e.message.toString())
+            }
 
-    suspend fun getSearchNews(query: String) {
+        }
+    }
+
+    fun insertSearchNews(query: String) {
+        viewModelScope.launch {
+            try {
+                newsInteractor.insertSearchNews(query, searchPage)
+            } catch (e: Exception) {
+                Log.w("Insert search news", e.message.toString())
+            }
+
+        }
+    }
+
+     fun getSearchNews(query: String) {
         _news.postValue(Resources.Loading())
         viewModelScope.launch {
             try {
