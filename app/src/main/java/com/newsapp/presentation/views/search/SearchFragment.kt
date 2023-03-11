@@ -13,18 +13,22 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.newsapp.R
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentSearchBinding
 import com.newsapp.presentation.adapters.SearchAdapter
 import com.newsapp.presentation.adapters.listener.ISearchListener
-import com.newsapp.util.Constants
 import com.newsapp.util.Constants.DELAY
 import com.newsapp.util.Constants.ERROR
+import com.newsapp.util.Constants.FAVORITE
 import com.newsapp.util.Constants.PAGE_SIZE
+import com.newsapp.util.NavHelper.replaceGraph
+import com.newsapp.util.NavHelper.showToast
 import com.newsapp.util.Resources
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -56,9 +60,13 @@ class SearchFragment : Fragment(), ISearchListener {
         viewBinding.searchRecycler.apply {
             adapter = searchAdapter
         }
+
+        viewModel.isUserLoggedIn()
+        viewModel.navigateToLogin()
+
         viewBinding.search.addTextChangedListener { edit ->
             job?.cancel()
-            job = MainScope().launch {
+            job = viewLifecycleOwner.lifecycleScope.launch {
                 delay(DELAY)
                 edit?.let {
                     if (edit.toString().isNotEmpty() && edit.toString().length > 3) {
@@ -90,7 +98,7 @@ class SearchFragment : Fragment(), ISearchListener {
                     }
                 }
                 is Resources.Loading -> {
-                    viewBinding.progressBar.visibility = View.VISIBLE
+                    viewBinding.loadingLayout.visibility = View.VISIBLE
                     loading = true
                 }
             }
@@ -102,7 +110,7 @@ class SearchFragment : Fragment(), ISearchListener {
     var lastPage = false
 
     private fun hideProgressBar() {
-        viewBinding.progressBar.visibility = View.INVISIBLE
+        viewBinding.loadingLayout.visibility = View.INVISIBLE
         loading = false
     }
 
@@ -124,8 +132,32 @@ class SearchFragment : Fragment(), ISearchListener {
     }
 
     override fun onFavClicked(title: String) {
-        viewModel.onFavClicked(title)
-        Toast.makeText(context, Constants.FAVORITE, Toast.LENGTH_LONG).show()
+        viewModel.login.observe(viewLifecycleOwner, Observer {
+            it.let {
+                if (it) {
+                    viewModel.onFavClicked(title)
+                    showToast(FAVORITE)
+                } else
+                    favoriteAlert()
+            }
+        })
+    }
+
+    private fun favoriteAlert() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setIcon(R.drawable.bookmarks)
+            .setTitle(getString(R.string.add_to_favorite))
+            .setMessage(getString(R.string.favorite_alert_message))
+            .setPositiveButton(getString(R.string.login)) { _, _ ->
+                viewModel.loginNav.observe(viewLifecycleOwner, Observer {
+                    if (it != null) {
+                        replaceGraph(it)
+                    }
+                })
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+            }
+            .show()
     }
 
 }

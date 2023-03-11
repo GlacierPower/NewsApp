@@ -41,52 +41,43 @@ class SourceFragment : Fragment(), ISourceListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.getSourceNews()
-        }
+        viewModel.getSourceNews()
 
         sourceAdapter = SourceAdapter(this)
         viewBinding.sourceRecycler.apply {
             setHasFixedSize(true)
             adapter = sourceAdapter
 
+            viewModel.connection.observe(viewLifecycleOwner, Observer {
+                it.let {
+                    if (it) {
+                        viewBinding.tryAgainLayout.visibility = View.VISIBLE
+                    } else {
+                        viewBinding.tryAgainLayout.visibility = View.INVISIBLE
+                    }
+                }
+            })
+
             viewModel.source.observe(viewLifecycleOwner, Observer { response ->
                 when (response) {
                     is Resources.Success -> {
-                        progressBar(false)
-                        tryAgain(false)
+                        viewBinding.loadingLayout.visibility = View.GONE
                         sourceAdapter.differ.submitList(response.data!!.sources)
                         viewBinding.sourceRecycler.adapter = sourceAdapter
                     }
                     is Resources.Error -> {
-                        tryAgain(true)
-                        progressBar(false)
+                        viewBinding.loadingLayout.visibility = View.GONE
+                        viewBinding.error.visibility = View.VISIBLE
                     }
                     is Resources.Loading -> {
-                        tryAgain(false)
-                        progressBar(true)
+                        viewBinding.loadingLayout.visibility = View.VISIBLE
                     }
                 }
             })
             viewBinding.newsLayout.setOnRefreshListener {
-                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                     viewModel.getSourceNews()
                     viewBinding.newsLayout.isRefreshing = false
-                }
             }
-        }
-    }
-
-    private fun progressBar(status: Boolean) {
-        viewBinding.progressBar.visibility = if (status) View.VISIBLE else View.GONE
-
-    }
-
-    private fun tryAgain(status: Boolean) {
-        if (status) {
-            viewBinding.tryAgainLayout.visibility = View.VISIBLE
-        } else {
-            viewBinding.tryAgainLayout.visibility = View.GONE
         }
     }
 

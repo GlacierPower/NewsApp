@@ -6,21 +6,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.newsapp.R
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentNewsBinding
 import com.newsapp.presentation.adapters.NewsAdapter
 import com.newsapp.presentation.adapters.listener.INewsListener
 import com.newsapp.util.Constants.FAVORITE
+import com.newsapp.util.NavHelper.replaceGraph
+import com.newsapp.util.NavHelper.showToast
 import com.newsapp.util.Resources
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 
 @AndroidEntryPoint
 class NewsFragment : Fragment(), INewsListener {
@@ -30,6 +30,11 @@ class NewsFragment : Fragment(), INewsListener {
 
     private var _viewBinding: FragmentNewsBinding? = null
     private val viewBinding get() = _viewBinding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,73 +48,50 @@ class NewsFragment : Fragment(), INewsListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        lifecycleScope.launchWhenResumed {
-            val isChecked = viewModel.getTheme.first()
-            setTheme(isChecked)
-        }
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.getNews()
-        }
+        viewModel.getNews()
 
         newsAdapter = NewsAdapter(this)
         viewBinding.newsRecycler.apply {
             setHasFixedSize(true)
             adapter = newsAdapter
 
-            viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                viewModel.newsLD.observe(viewLifecycleOwner, Observer { responce ->
-                    when (responce) {
-                        is Resources.Success -> {
-                            progressBar(false)
-                            tryAgain(false)
-                            newsAdapter.differ.submitList(responce.data!!.articles)
-                        }
-                        is Resources.Error -> {
-                            tryAgain(true)
-                            progressBar(false)
-                        }
-                        is Resources.Loading -> {
-                            tryAgain(false)
-                            progressBar(true)
-                        }
-                    }
-                })
+            viewModel.isUserLoggedIn()
+            viewModel.navigateToLogin()
 
-                viewBinding.newsLayout.setOnRefreshListener {
-                    viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-                        viewModel.getNews()
-                        viewBinding.newsLayout.isRefreshing = false
+            viewModel.connection.observe(viewLifecycleOwner, Observer {
+                it.let {
+                    if (it) {
+                        viewBinding.tryAgainLayout.visibility = View.VISIBLE
+                        viewBinding.newsRecycler.visibility = View.INVISIBLE
+                    } else {
+                        viewBinding.tryAgainLayout.visibility = View.INVISIBLE
                     }
                 }
+            })
+
+            viewModel.newsLD.observe(viewLifecycleOwner, Observer { responce ->
+                when (responce) {
+                    is Resources.Success -> {
+                        newsAdapter.differ.submitList(responce.data!!.articles)
+                        viewBinding.loadingLayout.visibility = View.GONE
+                    }
+                    is Resources.Error -> {
+                        viewBinding.error.visibility = View.VISIBLE
+                    }
+                    is Resources.Loading -> {
+                        viewBinding.loadingLayout.visibility = View.VISIBLE
+                    }
+                }
+            })
+
+            viewBinding.newsLayout.setOnRefreshListener {
+                viewModel.getNews()
+                viewBinding.newsLayout.isRefreshing = false
+
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.insertData()
-        }
-    }
-
-    private fun tryAgain(status: Boolean) {
-        if (status) {
-            viewBinding.tryAgainLayout.visibility = View.VISIBLE
-        } else {
-            viewBinding.tryAgainLayout.visibility = View.GONE
-        }
-    }
-
-    private fun progressBar(status: Boolean) {
-        viewBinding.progressBar.visibility = if (status) View.VISIBLE else View.GONE
-    }
-
-    private fun setTheme(isChecked: Boolean) {
-        if (isChecked) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            viewModel.saveTheme(true)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            viewModel.saveTheme(false)
-        }
+        viewModel.insertData()
     }
 
     override fun onShareClicked(newsResponse: NewsEntity) {
@@ -130,9 +112,35 @@ class NewsFragment : Fragment(), INewsListener {
     }
 
     override fun onFavClicked(title: String) {
-        viewModel.onFavClicked(title)
-        Toast.makeText(context, FAVORITE, Toast.LENGTH_LONG).show()
+        viewModel.userLoggedIn.observe(viewLifecycleOwner, Observer {
+            it.let {
+                if (it) {
+                    viewModel.onFavClicked(title)
+                    showToast(FAVORITE)
+                } else {
+                    favoriteAlert()
+                }
+            }
+        })
 
+
+    }
+
+    private fun favoriteAlert() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setIcon(R.drawable.bookmarks)
+            .setTitle(getString(R.string.add_to_favorite))
+            .setMessage(getString(R.string.favorite_alert_message))
+            .setPositiveButton(getString(R.string.login)) { _, _ ->
+                viewModel.navLogin.observe(viewLifecycleOwner, Observer {
+                    if (it != null) {
+                        replaceGraph(it)
+                    }
+                })
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+            }
+            .show()
     }
 
 }

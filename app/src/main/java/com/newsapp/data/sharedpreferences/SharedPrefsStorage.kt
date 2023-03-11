@@ -1,47 +1,45 @@
 package com.newsapp.data.sharedpreferences
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.createDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import javax.inject.Singleton
+import java.io.IOException
+import javax.inject.Inject
 
 abstract class PrefsDataStore(context: Context, fileName: String) {
     internal val dataStore: DataStore<Preferences> = context.createDataStore(fileName)
 }
 
-class DataStore(context: Context) : PrefsDataStore(context, PREF_FILE_UI_MODE), UIModeImpl {
+class DataStore @Inject constructor(context: Context) : PrefsDataStore(context, PREF_FILE_UI_MODE) {
 
 
-    override val uiMode: Flow<Boolean>
-        get() = dataStore.data.map { preferences ->
-            val uiMode = preferences[UI_MODE_KEY] ?: false
-            uiMode
-        }
-
-     val readCountry: Flow<String>
-        get() = dataStore.data.map { preferences ->
-            val country = preferences[COUNTRY_KEY] ?: "us"
-            country
-        }
-
-    override suspend fun saveToDataStore(isNightMode: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[UI_MODE_KEY] = isNightMode
-        }
-
-    }
-
-    override suspend fun saveCountry(country: String) {
+    suspend fun saveUiMode(isDarkMode:Boolean){
         dataStore.edit { preference ->
-            preference[COUNTRY_KEY] = country
+            preference[UI_MODE_KEY] = isDarkMode
+            Log.w("save data store", "success")
         }
     }
+
+    val readUiModeFromDataStore: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if(exception is IOException){
+                Log.d("DataStore", exception.message.toString())
+                emit(emptyPreferences())
+            }else {
+                throw exception
+            }
+        }
+        .map { preference ->
+            Log.w("get data store ", "success")
+            val uiMode = preference[UI_MODE_KEY] ?: false
+            uiMode
+
+        }
 
     companion object {
         private const val PREF_FILE_UI_MODE = "ui_mode_preference"
@@ -50,12 +48,4 @@ class DataStore(context: Context) : PrefsDataStore(context, PREF_FILE_UI_MODE), 
     }
 
 
-}
-
-@Singleton
-interface UIModeImpl {
-    val uiMode: Flow<Boolean>
-    suspend fun saveToDataStore(isNightMode: Boolean)
-
-    suspend fun saveCountry(country: String)
 }

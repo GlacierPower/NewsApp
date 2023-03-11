@@ -41,4 +41,5 @@ interface ApiService {
         @Query("apiKey")
         apiKey: String = KEY
     ): Response<NewsResponse>
+
 }

@@ -1,15 +1,18 @@
 package com.newsapp.presentation.views.category
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.newsapp.App
+import com.google.firebase.auth.FirebaseAuth
+import com.newsapp.R
 import com.newsapp.data.model.NewsResponse
-import com.newsapp.domain.NewsInteractor
-import com.newsapp.util.*
+import com.newsapp.domain.news.NewsInteractor
+import com.newsapp.util.Constants
+import com.newsapp.util.InternetConnection
+import com.newsapp.util.Resources
+import com.newsapp.util.newsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -17,12 +20,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val newsInteractor: NewsInteractor,
-    application: Application
-) : AndroidViewModel(application) {
+    private val newsInteractor: NewsInteractor
+) : ViewModel() {
+
+    @Inject
+    lateinit var internetConnection: InternetConnection
 
     private var _news = MutableLiveData<Resources<NewsResponse>>()
     val newsLD: LiveData<Resources<NewsResponse>> get() = _news
+
+    private var _connection = MutableLiveData<Boolean>()
+    val connection: LiveData<Boolean> get() = _connection
+
+    private var _loginNav = MutableLiveData<Int?>()
+    val loginNav: LiveData<Int?> get() = _loginNav
+
+    private var _userLoggedIn = MutableLiveData<Boolean>()
+    val userLoggedIn: LiveData<Boolean> get() = _userLoggedIn
 
     private var breakingNews = 1
 
@@ -30,6 +44,15 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             getBreakingNews()
         }
+    }
+
+
+    fun navigateToLogin() {
+        _loginNav.value = R.navigation.auth_graph
+    }
+
+    fun isUserLoggedIn() {
+        _userLoggedIn.value = FirebaseAuth.getInstance().currentUser != null
     }
 
     fun onFavClicked(title: String) {
@@ -58,17 +81,17 @@ class CategoryViewModel @Inject constructor(
         _news.postValue(Resources.Loading())
         viewModelScope.launch {
             try {
-                if (hasInternetConnection<App>()) {
+                if (internetConnection.isOnline()) {
                     val response = newsInteractor.getBreakingNews(category, breakingNews)
                     _news.postValue(newsResponse(response)!!)
+                    _connection.value = false
                 } else {
                     _news.postValue(Resources.Error(Constants.NO_CONNECTION))
-                    toast(getApplication(), Constants.NO_CONNECTION)
+                    _connection.value = true
                 }
             } catch (exception: Exception) {
                 when (exception) {
                     is IOException -> _news.postValue(Resources.Error(exception.message!!))
-                    else -> toast(getApplication(), Constants.ERROR)
                 }
 
             }
