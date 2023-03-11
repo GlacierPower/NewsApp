@@ -2,30 +2,25 @@ package com.newsapp.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.newsapp.R
 import com.newsapp.databinding.ActivityMainBinding
-import com.newsapp.presentation.views.ManActivityViewModel
+import com.newsapp.util.ThemeUtils
 import dagger.hilt.android.AndroidEntryPoint
-import github.com.st235.lib_expandablebottombar.ExpandableBottomBar
 import github.com.st235.lib_expandablebottombar.navigation.ExpandableBottomBarNavigationUI
-import kotlinx.coroutines.flow.first
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: ManActivityViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
@@ -38,8 +33,22 @@ class MainActivity : AppCompatActivity() {
                 R.id.newsFragment,
                 R.id.categoryFragment,
                 R.id.sourceFragment,
+                R.id.settingFragment,
+                R.id.saveFragment,
+                R.id.searchFragment
             )
         )
+        navController.addOnDestinationChangedListener { _, destinationID, _ ->
+            when (destinationID.id) {
+                R.id.newsFragment -> showBottomBar()
+                R.id.categoryFragment -> showBottomBar()
+                R.id.sourceFragment -> showBottomBar()
+                R.id.settingFragment -> showBottomBar()
+                R.id.saveFragment -> showBottomBar()
+                R.id.searchFragment -> showBottomBar()
+                else -> binding.bottomBar.visibility = View.GONE
+            }
+        }
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
@@ -47,6 +56,11 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+    private fun showBottomBar() {
+        binding.bottomBar.visibility = View.VISIBLE
+    }
+
 
 }
 

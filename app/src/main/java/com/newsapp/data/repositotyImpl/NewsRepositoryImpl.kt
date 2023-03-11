@@ -6,7 +6,8 @@ import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.data.model.NewsResponse
 import com.newsapp.data.model.SourceResponse
 import com.newsapp.data.service.ApiService
-import com.newsapp.domain.NewsRepository
+import com.newsapp.data.sharedpreferences.DataStore
+import com.newsapp.domain.news.NewsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(
     private val newsDao: NewsDao,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val store: DataStore
 ) : NewsRepository {
     override suspend fun getNews(): Response<NewsResponse> {
         return withContext(Dispatchers.IO) {
@@ -23,7 +25,7 @@ class NewsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getBreakingNews(category: String, page: Int): Response<NewsResponse> {
+        override suspend fun getBreakingNews(category: String, page: Int): Response<NewsResponse> {
         return withContext(Dispatchers.IO) {
             apiService.getNewsByCategory(category = category, page = page)
         }
@@ -115,7 +117,7 @@ class NewsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteAllNews() {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             newsDao.deleteAllNews()
         }
     }
@@ -149,5 +151,20 @@ class NewsRepositoryImpl @Inject constructor(
             newsDao.getFavoriteEntities()
         }
     }
+
+    override suspend fun getTheme(): Flow<Boolean> {
+        return withContext(Dispatchers.IO) {
+            store.readUiModeFromDataStore
+        }
+    }
+
+
+    override suspend fun saveTheme(isDarkMode: Boolean) {
+        withContext(Dispatchers.IO) {
+            store.saveUiMode(isDarkMode)
+
+        }
+    }
+
 
 }

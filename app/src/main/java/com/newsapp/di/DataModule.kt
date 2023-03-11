@@ -2,9 +2,13 @@ package com.newsapp.di
 
 import android.app.Application
 import com.newsapp.data.repositotyImpl.NewsRepositoryImpl
+import com.newsapp.data.repositotyImpl.SignInRepositoryImpl
+import com.newsapp.data.repositotyImpl.SignUpRepositoryImpl
 import com.newsapp.data.service.ApiService
 import com.newsapp.data.sharedpreferences.DataStore
-import com.newsapp.domain.NewsRepository
+import com.newsapp.domain.news.NewsRepository
+import com.newsapp.domain.sign_in.SignInRepository
+import com.newsapp.domain.sing_up.SignUpRepository
 import com.newsapp.util.Constants.BASE_URL
 import dagger.Binds
 import dagger.Module
@@ -25,7 +29,18 @@ abstract class DataModule {
     abstract fun bindNewsRepository(
         newsRepositoryImpl: NewsRepositoryImpl
     ): NewsRepository
-    companion object{
+
+    @Binds
+    abstract fun bindSignInRepository(
+        signInRepositoryImpl: SignInRepositoryImpl
+    ): SignInRepository
+
+    @Binds
+    abstract fun bindSignUpRepository(
+        signUpRepositoryImpl: SignUpRepositoryImpl
+    ): SignUpRepository
+
+    companion object {
         @Provides
         fun provideApiService(retrofit: Retrofit): ApiService =
             retrofit.create(ApiService::class.java)

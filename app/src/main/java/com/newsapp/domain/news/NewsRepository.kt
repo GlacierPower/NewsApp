@@ -1,4 +1,4 @@
-package com.newsapp.domain
+package com.newsapp.domain.news
 
 import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.data.data_base.NewsEntity
@@ -32,5 +32,11 @@ interface NewsRepository {
     suspend fun insertToFavorite(newsEntity: NewsEntity)
 
     suspend fun getFavorite(): Flow<List<FavoriteEntity>>
+
+    suspend fun getTheme(): Flow<Boolean>
+
+    suspend fun saveTheme(isDarkMode: Boolean)
+
+
 
 }

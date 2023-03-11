@@ -1,4 +1,4 @@
-package com.newsapp.domain
+package com.newsapp.domain.news
 
 import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.data.data_base.NewsEntity
@@ -27,13 +27,14 @@ class NewsInteractor @Inject constructor(private val newsRepository: NewsReposit
     }
 
     suspend fun insertData() {
-     newsRepository.insertData()
+        newsRepository.insertData()
     }
-    suspend fun insertCategory(category: String, page: Int){
+
+    suspend fun insertCategory(category: String, page: Int) {
         newsRepository.insertCategory(category, page)
     }
 
-    suspend fun insertSearchNews(query: String, page: Int){
+    suspend fun insertSearchNews(query: String, page: Int) {
         newsRepository.insertSearchNews(query, page)
     }
 
@@ -56,6 +57,14 @@ class NewsInteractor @Inject constructor(private val newsRepository: NewsReposit
 
     suspend fun getFavorite(): Flow<List<FavoriteEntity>> {
         return newsRepository.getFavorite()
+    }
+
+    suspend fun getTheme(): Flow<Boolean> {
+        return newsRepository.getTheme()
+    }
+
+    suspend fun saveTheme(isDarkMode: Boolean) {
+        newsRepository.saveTheme(isDarkMode)
     }
 
 

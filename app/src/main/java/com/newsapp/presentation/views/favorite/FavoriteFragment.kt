@@ -9,15 +9,13 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.newsapp.R
 import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.databinding.FragmentSaveBinding
-import com.newsapp.presentation.adapters.CategoryAdapter
 import com.newsapp.presentation.adapters.SavedAdapter
 import com.newsapp.presentation.adapters.listener.ISaveListener
-import com.newsapp.util.Constants
+import com.newsapp.util.NavHelper.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
 
@@ -30,7 +28,6 @@ class FavoriteFragment : Fragment(), ISaveListener {
     private val viewBinding get() = _viewBinding!!
 
     private lateinit var savedAdapter: SavedAdapter
-
 
 
     override fun onCreateView(
@@ -52,8 +49,6 @@ class FavoriteFragment : Fragment(), ISaveListener {
         }
 
 
-
-
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewModel.news.catch {
                 Toast.makeText(context, it.message.toString(), Toast.LENGTH_SHORT).show()
@@ -66,20 +61,33 @@ class FavoriteFragment : Fragment(), ISaveListener {
 
 
     }
-    private fun deleteAlert() =
+
+    private fun deleteAllAlert() {
         MaterialAlertDialogBuilder(requireContext())
             .setIcon(R.drawable.delete)
             .setTitle(getString(R.string.delete_all_news))
             .setMessage(getString(R.string.are_you_sure))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                     viewModel.deleteAllNews()
-                }
             }
             .setNegativeButton(getString(R.string.no)) { _, _ ->
             }
             .show()
+    }
 
+    private fun deleteNewsAlert(title: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setIcon(R.drawable.delete)
+            .setTitle(getString(R.string.delete_news))
+            .setMessage(getString(R.string.are_you_sure_delete_news))
+            .setPositiveButton(getText(R.string.yes)) { _, _ ->
+                viewModel.deleteNews(title)
+                showToast(getString(R.string.delete_from_favorite))
+            }
+            .setNegativeButton(getString(R.string.no)) { _, _ ->
+            }
+            .show()
+    }
 
     override fun onShareClicked(newsResponse: FavoriteEntity) {
         val sendIntent: Intent = Intent().apply {
@@ -99,8 +107,7 @@ class FavoriteFragment : Fragment(), ISaveListener {
     }
 
     override fun deleteNewsByTitle(title: String) {
-        viewModel.deleteNews(title)
-        Toast.makeText(context,getString(R.string.delete_from_favorite), Toast.LENGTH_LONG).show()
+        deleteNewsAlert(title)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -113,7 +120,7 @@ class FavoriteFragment : Fragment(), ISaveListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.deleteAllNews -> {
-                deleteAlert()
+                deleteAllAlert()
             }
         }
         return false

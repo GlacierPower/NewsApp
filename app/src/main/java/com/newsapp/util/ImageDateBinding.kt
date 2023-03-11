@@ -4,16 +4,13 @@ import android.annotation.SuppressLint
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.signature.ObjectKey
 import com.newsapp.R
 import com.newsapp.di.GlideApp
-import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-class ImageDataBinding @Inject constructor() {
+class ImageDateBinding @Inject constructor() {
     companion object {
         @BindingAdapter("urlToImage")
         @JvmStatic
@@ -33,9 +30,9 @@ class ImageDataBinding @Inject constructor() {
         @SuppressLint("SimpleDateFormat")
         @BindingAdapter("timeAgoFormat")
         @JvmStatic
-        fun convertToTimeAgoFormat(textView: TextView, time: String?) {
+        fun convertToTimeAgoFormat(textView: TextView, time: String) {
             try {
-                val timeAgo = time?.let { formatTimeAgo(it) }
+                val timeAgo = formatTimeAgo(time)
                 textView.text = timeAgo
             } catch (e: Exception) {
                 e.printStackTrace()

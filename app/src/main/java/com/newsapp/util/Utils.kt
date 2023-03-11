@@ -4,30 +4,45 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import dagger.hilt.android.internal.Contexts.getApplication
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-fun <T : Application> AndroidViewModel.hasInternetConnection(): Boolean {
-    val connectivityManager = getApplication<T>().getSystemService(
-        Context.CONNECTIVITY_SERVICE,
-    ) as ConnectivityManager
+class InternetConnection @Inject constructor(
+    private val context: Context
+) {
 
-    val activeNetwork = connectivityManager.activeNetwork ?: return false
-    val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-    return when {
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-        else -> false
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun isOnline(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+        return false
     }
+
 }
 
-fun toast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
 
 fun formatTimeAgo(date1: String): String {
     var conversionTime = ""

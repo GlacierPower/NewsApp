@@ -6,17 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.views.setting.SettingFragment">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/user"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="start|center"
+            android:layout_marginTop="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/enable_dark_mode"
             style="@style/Stroke_MaterialCardView"
             android:layout_width="360dp"
             android:layout_height="65dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="255dp"
             android:focusable="auto"
             android:focusableInTouchMode="true"
             android:orientation="horizontal"
@@ -119,5 +130,68 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/login"
+            style="@style/Stroke_MaterialCardView"
+            android:layout_width="150dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="160dp"
+            android:orientation="horizontal"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="start|center"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/login" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingStart="60dp"
+                android:text="@string/login"
+                android:textSize="17sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/logout"
+            style="@style/Stroke_MaterialCardView"
+            android:layout_width="150dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="160dp"
+            android:orientation="horizontal"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="start|center"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/logout" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingStart="60dp"
+                android:text="@string/logout"
+                android:textSize="17sp" />
+
+        </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

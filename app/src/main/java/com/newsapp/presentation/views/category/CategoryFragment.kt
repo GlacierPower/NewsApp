@@ -6,22 +6,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.newsapp.R
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentCategoryBinding
 import com.newsapp.presentation.adapters.CategoryAdapter
 import com.newsapp.presentation.adapters.NewsAdapter
 import com.newsapp.presentation.adapters.listener.INewsListener
 import com.newsapp.util.Constants
+import com.newsapp.util.Constants.FAVORITE
+import com.newsapp.util.NavHelper.replaceGraph
+import com.newsapp.util.NavHelper.showToast
 import com.newsapp.util.Resources
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CategoryFragment : Fragment(), INewsListener {
@@ -55,23 +57,34 @@ class CategoryFragment : Fragment(), INewsListener {
             adapter = categoryAdapter
         }
 
-        viewModel.newsLD.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resources.Success -> {
-                    progressBarStatus(false)
-                    tryAgainStatus(false)
-                    newsAdapter.differ.submitList(response.data!!.articles)
-                }
-                is Resources.Error -> {
-                    tryAgainStatus(true)
-                    progressBarStatus(false)
-                }
-                is Resources.Loading -> {
-                    tryAgainStatus(false)
-                    progressBarStatus(true)
+        viewModel.navigateToLogin()
+        viewModel.isUserLoggedIn()
+
+        viewModel.connection.observe(viewLifecycleOwner, Observer {
+            it.let {
+                if (it) {
+                    viewBinding.tryAgainLayout.visibility = View.VISIBLE
+                } else {
+                    viewBinding.tryAgainLayout.visibility = View.INVISIBLE
                 }
             }
         })
+
+        viewModel.newsLD.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resources.Success -> {
+                    viewBinding.loadingLayout.visibility = View.GONE
+                    newsAdapter.differ.submitList(response.data!!.articles)
+                }
+                is Resources.Error -> {
+                    viewBinding.error. visibility = View.VISIBLE
+                }
+                is Resources.Loading -> {
+                    viewBinding.loadingLayout.visibility = View.VISIBLE
+                }
+            }
+        })
+
         categoryAdapter.onItemClickListener { news ->
             viewLifecycleOwner.lifecycleScope.launchWhenResumed {
                 viewModel.getBreakingNews(news)
@@ -82,18 +95,8 @@ class CategoryFragment : Fragment(), INewsListener {
 
     }
 
-
-    private fun tryAgainStatus(status: Boolean) {
-        if (status) {
-            viewBinding.tryAgainLayout.visibility = View.VISIBLE
-        } else {
-            viewBinding.tryAgainLayout.visibility = View.GONE
-        }
-
-    }
-
     private fun progressBarStatus(status: Boolean) {
-        viewBinding.progressBar.visibility = if (status) View.VISIBLE else View.GONE
+        viewBinding.loadingLayout.visibility = if (status) View.VISIBLE else View.GONE
 
     }
 
@@ -115,7 +118,33 @@ class CategoryFragment : Fragment(), INewsListener {
     }
 
     override fun onFavClicked(title: String) {
-        viewModel.onFavClicked(title)
-        Toast.makeText(context, Constants.FAVORITE, Toast.LENGTH_LONG).show()
+        viewModel.userLoggedIn.observe(viewLifecycleOwner, Observer {
+            it.let {
+                if (it) {
+                    viewModel.onFavClicked(title)
+                    showToast(FAVORITE)
+                } else {
+                    favoriteAlert()
+                }
+            }
+        })
+
+    }
+
+    private fun favoriteAlert() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setIcon(R.drawable.bookmarks)
+            .setTitle(getString(R.string.add_to_favorite))
+            .setMessage(getString(R.string.favorite_alert_message))
+            .setPositiveButton(getString(R.string.login)) { _, _ ->
+                viewModel.loginNav.observe(viewLifecycleOwner, Observer {
+                    if (it != null) {
+                        replaceGraph(it)
+                    }
+                })
+            }
+            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
+            }
+            .show()
     }
 }

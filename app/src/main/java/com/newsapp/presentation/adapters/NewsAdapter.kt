@@ -52,21 +52,21 @@ class NewsAdapter(private val listener: INewsListener) :
 
     inner class NewsViewHolder(private val itemsNewsBinding: ItemsNewsBinding) :
         RecyclerView.ViewHolder(itemsNewsBinding.root) {
-        fun bind(newsResponse: NewsEntity) {
+        fun bind(newsEntity: NewsEntity) {
             itemsNewsBinding.apply {
-                itemsNewsBinding.news = newsResponse
+                itemsNewsBinding.news = newsEntity
                 itemsNewsBinding.executePendingBindings()
 
                 itemsNewsBinding.btnShareNews.setOnClickListener {
-                    listener.onShareClicked(newsResponse)
+                    listener.onShareClicked(newsEntity)
                 }
 
                 itemsNewsBinding.root.setOnClickListener {
-                    listener.onItemClicked(newsResponse)
+                    listener.onItemClicked(newsEntity)
                 }
 
                 itemsNewsBinding.btnSavedNews.setOnClickListener {
-                    listener.onFavClicked(newsResponse.title)
+                    listener.onFavClicked(newsEntity.title)
                 }
             }
 
