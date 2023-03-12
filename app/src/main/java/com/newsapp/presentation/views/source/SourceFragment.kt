@@ -67,7 +67,7 @@ class SourceFragment : Fragment(), ISourceListener {
                     }
                     is Resources.Error -> {
                         viewBinding.loadingLayout.visibility = View.GONE
-                        viewBinding.error.visibility = View.VISIBLE
+                        viewBinding.tryAgainLayout.visibility = View.VISIBLE
                     }
                     is Resources.Loading -> {
                         viewBinding.loadingLayout.visibility = View.VISIBLE

@@ -4,6 +4,7 @@ import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.data.model.NewsResponse
 import com.newsapp.data.model.SourceResponse
+import com.newsapp.data.sharedpreferences.UIMode
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
@@ -33,9 +34,9 @@ interface NewsRepository {
 
     suspend fun getFavorite(): Flow<List<FavoriteEntity>>
 
-    suspend fun getTheme(): Flow<Boolean>
+    suspend fun setDarkMode(uiMode: UIMode)
 
-    suspend fun saveTheme(isDarkMode: Boolean)
+    fun uIModeFlow():Flow<UIMode>
 
 
 

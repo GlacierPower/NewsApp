@@ -43,7 +43,6 @@ class InternetConnection @Inject constructor(
 
 }
 
-
 fun formatTimeAgo(date1: String): String {
     var conversionTime = ""
     try {

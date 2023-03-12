@@ -4,6 +4,7 @@ import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.data.model.NewsResponse
 import com.newsapp.data.model.SourceResponse
+import com.newsapp.data.sharedpreferences.UIMode
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import javax.inject.Inject
@@ -59,13 +60,12 @@ class NewsInteractor @Inject constructor(private val newsRepository: NewsReposit
         return newsRepository.getFavorite()
     }
 
-    suspend fun getTheme(): Flow<Boolean> {
-        return newsRepository.getTheme()
+    suspend fun setDarkMode(uiMode: UIMode) {
+        newsRepository.setDarkMode(uiMode)
     }
 
-    suspend fun saveTheme(isDarkMode: Boolean) {
-        newsRepository.saveTheme(isDarkMode)
+   fun uIModeFlow():Flow<UIMode> {
+       return newsRepository.uIModeFlow()
     }
-
 
 }
