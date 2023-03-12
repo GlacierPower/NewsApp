@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.newsapp.R
 import com.newsapp.data.model.NewsResponse
+import com.newsapp.data.sharedpreferences.UIMode
 import com.newsapp.domain.news.NewsInteractor
 import com.newsapp.util.Constants
 import com.newsapp.util.InternetConnection
@@ -95,5 +96,6 @@ class NewsViewModels @Inject constructor(
         }
     }
 
+    val theme = newsInteractor.uIModeFlow()
 
 }

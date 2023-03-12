@@ -6,7 +6,8 @@ import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.data.model.NewsResponse
 import com.newsapp.data.model.SourceResponse
 import com.newsapp.data.service.ApiService
-import com.newsapp.data.sharedpreferences.DataStore
+import com.newsapp.data.sharedpreferences.SettingDataStore
+import com.newsapp.data.sharedpreferences.UIMode
 import com.newsapp.domain.news.NewsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class NewsRepositoryImpl @Inject constructor(
     private val newsDao: NewsDao,
     private val apiService: ApiService,
-    private val store: DataStore
+    private val settingDataStore: SettingDataStore
+//    private val store: DataStore
 ) : NewsRepository {
     override suspend fun getNews(): Response<NewsResponse> {
         return withContext(Dispatchers.IO) {
@@ -25,7 +27,7 @@ class NewsRepositoryImpl @Inject constructor(
         }
     }
 
-        override suspend fun getBreakingNews(category: String, page: Int): Response<NewsResponse> {
+    override suspend fun getBreakingNews(category: String, page: Int): Response<NewsResponse> {
         return withContext(Dispatchers.IO) {
             apiService.getNewsByCategory(category = category, page = page)
         }
@@ -152,19 +154,14 @@ class NewsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTheme(): Flow<Boolean> {
-        return withContext(Dispatchers.IO) {
-            store.readUiModeFromDataStore
-        }
-    }
-
-
-    override suspend fun saveTheme(isDarkMode: Boolean) {
+    override suspend fun setDarkMode(uiMode: UIMode) {
         withContext(Dispatchers.IO) {
-            store.saveUiMode(isDarkMode)
-
+            settingDataStore.setDarkMode(uiMode)
         }
     }
 
+    override fun uIModeFlow(): Flow<UIMode> {
+        return settingDataStore.uiModeFlow
+    }
 
 }

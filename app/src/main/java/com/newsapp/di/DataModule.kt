@@ -1,11 +1,9 @@
 package com.newsapp.di
 
-import android.app.Application
 import com.newsapp.data.repositotyImpl.NewsRepositoryImpl
 import com.newsapp.data.repositotyImpl.SignInRepositoryImpl
 import com.newsapp.data.repositotyImpl.SignUpRepositoryImpl
 import com.newsapp.data.service.ApiService
-import com.newsapp.data.sharedpreferences.DataStore
 import com.newsapp.domain.news.NewsRepository
 import com.newsapp.domain.sign_in.SignInRepository
 import com.newsapp.domain.sing_up.SignUpRepository
@@ -20,7 +18,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -77,12 +74,6 @@ abstract class DataModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
-        }
-
-        @Singleton
-        @Provides
-        fun providePreferenceManager(application: Application): DataStore {
-            return DataStore(application.applicationContext)
         }
 
     }

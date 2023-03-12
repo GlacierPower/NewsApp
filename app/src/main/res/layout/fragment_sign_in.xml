@@ -2,16 +2,15 @@
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/news_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context="presentation.login.LoginFragment">
+        tools:context="presentation.login.LoginFragment"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textLogin"
@@ -39,12 +38,12 @@
             app:boxStrokeErrorColor="@color/error_color"
             app:errorEnabled="true"
             app:helperTextEnabled="true"
-            app:startIconDrawable="@drawable/email"
             app:helperTextTextColor="@color/error_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textLogin">
+            app:layout_constraintTop_toBottomOf="@+id/textLogin"
+            app:startIconDrawable="@drawable/email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/email"
@@ -88,12 +87,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:visibility="visible"
             android:text="@string/sign_in"
-            android:textColor="#000000"
+            android:textColor="@color/teal_700"
             app:cornerRadius="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/layoutPassword"
+            tools:ignore="DuplicateSpeakableTextCheck" />
 
 
         <com.google.android.material.textview.MaterialTextView

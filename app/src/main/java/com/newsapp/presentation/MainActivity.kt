@@ -3,21 +3,18 @@ package com.newsapp.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.newsapp.R
 import com.newsapp.databinding.ActivityMainBinding
-import com.newsapp.util.ThemeUtils
 import dagger.hilt.android.AndroidEntryPoint
 import github.com.st235.lib_expandablebottombar.navigation.ExpandableBottomBarNavigationUI
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
 
     private lateinit var binding: ActivityMainBinding
 

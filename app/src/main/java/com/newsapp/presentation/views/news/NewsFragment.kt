@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.newsapp.R
 import com.newsapp.data.data_base.NewsEntity
+import com.newsapp.data.sharedpreferences.UIMode
 import com.newsapp.databinding.FragmentNewsBinding
 import com.newsapp.presentation.adapters.NewsAdapter
 import com.newsapp.presentation.adapters.listener.INewsListener
@@ -31,9 +34,6 @@ class NewsFragment : Fragment(), INewsListener {
     private var _viewBinding: FragmentNewsBinding? = null
     private val viewBinding get() = _viewBinding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +69,10 @@ class NewsFragment : Fragment(), INewsListener {
                 }
             })
 
+            viewModel.theme.asLiveData().observe(viewLifecycleOwner) {
+                setCheckedMode(it)
+            }
+
             viewModel.newsLD.observe(viewLifecycleOwner, Observer { responce ->
                 when (responce) {
                     is Resources.Success -> {
@@ -76,7 +80,7 @@ class NewsFragment : Fragment(), INewsListener {
                         viewBinding.loadingLayout.visibility = View.GONE
                     }
                     is Resources.Error -> {
-                        viewBinding.error.visibility = View.VISIBLE
+                        viewBinding.tryAgainLayout.visibility = View.VISIBLE
                     }
                     is Resources.Loading -> {
                         viewBinding.loadingLayout.visibility = View.VISIBLE
@@ -141,6 +145,20 @@ class NewsFragment : Fragment(), INewsListener {
             .setNegativeButton(getString(R.string.cancel)) { _, _ ->
             }
             .show()
+
+
+    }
+
+    private fun setCheckedMode(uiMode: UIMode?) {
+        when (uiMode) {
+            UIMode.LIGHT -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+            UIMode.DARK -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            else -> {}
+        }
     }
 
 }

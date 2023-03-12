@@ -77,7 +77,7 @@ class CategoryFragment : Fragment(), INewsListener {
                     newsAdapter.differ.submitList(response.data!!.articles)
                 }
                 is Resources.Error -> {
-                    viewBinding.error. visibility = View.VISIBLE
+                    viewBinding.tryAgainLayout.visibility = View.VISIBLE
                 }
                 is Resources.Loading -> {
                     viewBinding.loadingLayout.visibility = View.VISIBLE
@@ -95,10 +95,6 @@ class CategoryFragment : Fragment(), INewsListener {
 
     }
 
-    private fun progressBarStatus(status: Boolean) {
-        viewBinding.loadingLayout.visibility = if (status) View.VISIBLE else View.GONE
-
-    }
 
     override fun onShareClicked(newsResponse: NewsEntity) {
         val sendIntent: Intent = Intent().apply {

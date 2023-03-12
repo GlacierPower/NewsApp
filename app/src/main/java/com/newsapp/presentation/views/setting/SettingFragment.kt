@@ -1,24 +1,25 @@
 package com.newsapp.presentation.views.setting
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import com.newsapp.R
+import com.newsapp.data.sharedpreferences.SettingDataStore
+import com.newsapp.data.sharedpreferences.UIMode
 import com.newsapp.databinding.FragmentSettingBinding
 import com.newsapp.util.FragmentUtils.refreshFragment
 import com.newsapp.util.NavHelper.navigate
 import com.newsapp.util.NavHelper.replaceGraph
 import com.newsapp.util.NavHelper.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingFragment : Fragment() {
@@ -38,33 +39,15 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            viewModel.theme.catch {
-                Toast.makeText(context, it.message.toString(), Toast.LENGTH_SHORT).show()
-            }.collect { flowBool ->
-                flowBool.collect { bool ->
-                    viewBinding.darkMode.isChecked != bool
-                }
-            }
-        }
-
-        val currentMode = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
-        viewBinding.darkMode.isChecked = currentMode == Configuration.UI_MODE_NIGHT_YES
-        viewBinding.darkMode.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                viewModel.saveTheme(true)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                viewModel.saveTheme(false)
-            }
-        }
+        initView()
 
         viewModel.navigateToLogin()
 
         viewModel.connect()
+
+        viewModel.theme.asLiveData().observe(viewLifecycleOwner) { uiMode ->
+            setCheckedMode(uiMode)
+        }
 
         viewBinding.login.setOnClickListener {
             viewModel.connect.observe(viewLifecycleOwner, Observer { it ->
@@ -121,6 +104,31 @@ class SettingFragment : Fragment() {
         }
 
 
+    }
+
+    private fun setCheckedMode(uiMode: UIMode?) {
+        when (uiMode) {
+            UIMode.LIGHT -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                viewBinding.darkMode.isChecked = false
+            }
+            UIMode.DARK -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                viewBinding.darkMode.isChecked = true
+            }
+            else -> {}
+        }
+    }
+
+    private fun initView() {
+        viewBinding.darkMode.setOnCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                when (isChecked) {
+                    true -> viewModel.setMode(UIMode.DARK)
+                    false -> viewModel.setMode(UIMode.LIGHT)
+                }
+            }
+        }
     }
 
 }

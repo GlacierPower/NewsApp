@@ -64,6 +64,8 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.5.2"
     implementation "androidx.navigation:navigation-compose:2.5.1"
     implementation 'com.google.firebase:firebase-auth:21.0.3'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
+    androidTestImplementation 'junit:junit:4.12'
 
 
     // Hilt
@@ -88,7 +90,7 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
     // Preference DataStore
-    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha06"
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha02"
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
@@ -141,4 +143,13 @@ dependencies {
     //lottie
     implementation "com.airbnb.android:lottie:3.4.0"
 
+
+    testImplementation("androidx.test.ext:junit:1.1.4")
+    testImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:2.19.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("androidx.test:runner:1.5.1")
+    testImplementation( "androidx.test:rules:1.5.0")
 }
