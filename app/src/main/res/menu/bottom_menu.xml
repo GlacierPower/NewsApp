@@ -19,10 +19,5 @@
         android:icon="@drawable/source"
         android:title="@string/source"
         app:exb_color="@color/light_blue"/>
-
-    <item
-        android:id="@+id/settingFragment"
-        android:icon="@drawable/person"
-        android:title="@string/profile"
-        app:exb_color="@color/light_blue"/>
+    
 </menu>

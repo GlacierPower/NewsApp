@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.newsapp.R
 import com.newsapp.databinding.FragmentForgotPasswordBinding
 import com.newsapp.util.NavHelper.navigate
@@ -31,17 +32,17 @@ class ForgotPasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewBinding.btnForgot.setOnClickListener {
-            val email = viewBinding.emailForgot.text.toString()
-            if (viewModel.resetPassword(email)) {
-                viewBinding.loadingLayout.visibility = View.VISIBLE
-                viewModel.nav.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        navigate(it)
+        viewModel.forgotPass.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                viewModel.showProgressBar()
+                viewModel.nav.observe(viewLifecycleOwner) { destination ->
+                    if (destination != null) {
+                        navigate(destination)
                     }
                 }
             } else showWarning()
-        }
+        })
+
         viewModel.isSuccess.observe(viewLifecycleOwner) {
             if (it) {
                 viewModel.navigate()
@@ -53,7 +54,10 @@ class ForgotPasswordFragment : Fragment() {
             if (msg.isNotEmpty()) {
                 showToast(msg)
             }
-
+        }
+        viewBinding.btnForgot.setOnClickListener {
+            val email = viewBinding.emailForgot.text.toString()
+            viewModel.resetPassword(email)
         }
     }
 

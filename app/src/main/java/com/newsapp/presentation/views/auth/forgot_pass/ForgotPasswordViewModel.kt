@@ -1,5 +1,6 @@
 package com.newsapp.presentation.views.auth.forgot_pass
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,6 @@ import com.newsapp.domain.sign_in.SignInInteractor
 import com.newsapp.util.Constants.isEmailValid
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,19 +23,29 @@ class ForgotPasswordViewModel @Inject constructor(private val signInInteractor: 
     val isSuccess: LiveData<Boolean>
         get() = _isSuccess
 
+    private var _forgotPass = MutableLiveData<Boolean>()
+    val forgotPass: LiveData<Boolean> get() = _forgotPass
+
     private var _nav = MutableLiveData<Int?>()
     val nav: LiveData<Int?> get() = _nav
 
-    fun resetPassword(email: String): Boolean {
-        return if (validation(email)) {
+    private var _progressBar = MutableLiveData<Int>()
+    val progressBar: LiveData<Int> get() = _progressBar
+
+    fun showProgressBar() {
+        _progressBar.postValue(View.VISIBLE)
+    }
+
+    fun resetPassword(email: String) {
+        if (validation(email)) {
             viewModelScope.launch {
                 signInInteractor.sendPasswordResetEmail(email) { isSuccess, message ->
                     _isSuccess.value = isSuccess
                     _exceptionMessage.value = message
                 }
             }
-            true
-        } else false
+            _forgotPass.value = true
+        } else _forgotPass.value = false
     }
 
     fun navigate() {

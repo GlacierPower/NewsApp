@@ -1,6 +1,7 @@
 package com.newsapp.presentation.views.news
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.newsapp.R
 import com.newsapp.data.model.NewsResponse
 import com.newsapp.data.sharedpreferences.UIMode
+import com.newsapp.domain.dark_mode.DarkModeInteractor
 import com.newsapp.domain.news.NewsInteractor
 import com.newsapp.util.Constants
 import com.newsapp.util.InternetConnection
@@ -21,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewsViewModels @Inject constructor(
-    private val newsInteractor: NewsInteractor
+    private val newsInteractor: NewsInteractor,
 ) : ViewModel() {
 
     @Inject
@@ -39,9 +41,19 @@ class NewsViewModels @Inject constructor(
     private var _navLogin = MutableLiveData<Int?>()
     val navLogin: LiveData<Int?> get() = _navLogin
 
+    private var _progressBar = MutableLiveData<Int>()
+    val progressBar: LiveData<Int> get() = _progressBar
 
     private var _temp = MutableLiveData<Resources<NewsResponse>>()
     val temp: LiveData<Resources<NewsResponse>> get() = _temp
+
+    fun showProgressBar() {
+        _progressBar.postValue(View.VISIBLE)
+    }
+
+    fun hideProgressBar() {
+        _progressBar.postValue(View.GONE)
+    }
 
 
     fun navigateToLogin() {
@@ -95,7 +107,5 @@ class NewsViewModels @Inject constructor(
             }
         }
     }
-
-    val theme = newsInteractor.uIModeFlow()
 
 }

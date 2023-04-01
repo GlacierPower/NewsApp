@@ -55,5 +55,11 @@
     <string name="add_to_favorite">Favorite</string>
     <string name="cancel">Cancel</string>
     <string name="favorite_alert_message">Only registered users can add news to favorite! Would you like to sign in now?</string>
+    <string name="text_plain">text/plain</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <string name="tools">Tools</string>
+    <string name="welcome">Welcome!</string>
+    <string name="home">Home</string>
 
 </resources>

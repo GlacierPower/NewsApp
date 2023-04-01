@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.newsapp.R
 import com.newsapp.databinding.FragmentSignInBinding
 import com.newsapp.util.NavHelper.navigate
@@ -34,6 +35,9 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        viewModel.progressBar.observe(viewLifecycleOwner, Observer { progressBar ->
+            viewBinding.loadingLayout.visibility = progressBar
+        })
         viewModel.isSuccess.observe(viewLifecycleOwner) {
             if (it) {
                 viewModel.replaceGraph()
@@ -41,45 +45,63 @@ class SignInFragment : Fragment() {
         }
         viewModel.exceptionMessage.observe(viewLifecycleOwner) { msg ->
             if (msg.isNotEmpty()) {
-                viewBinding.loadingLayout.visibility = View.GONE
+                viewModel.hideProgressBar()
                 showToast(msg)
             }
         }
-        viewBinding.btnLogin.setOnClickListener {
+
+        viewModel.signIn.observe(viewLifecycleOwner, Observer {
             val view: View? = activity?.currentFocus
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            val email = viewBinding.email.text.toString()
-            val pass = viewBinding.password.text.toString()
-            if (viewModel.signIn(email, pass)) {
-                viewBinding.loadingLayout.visibility = View.VISIBLE
-                viewModel.nav.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        replaceGraph(it)
+            if (it) {
+                viewModel.showProgressBar()
+                viewModel.nav.observe(viewLifecycleOwner) { destination ->
+                    if (destination != null) {
+                        replaceGraph(destination)
+                        activity?.recreate()
                     }
-
                 }
                 imm.hideSoftInputFromWindow(view!!.windowToken, 0)
             } else showWarning()
+        })
+
+        viewBinding.btnLogin.setOnClickListener {
+            signIn()
         }
 
-        viewModel.navigateToForgotPassword()
+
         viewBinding.forgotPass.setOnClickListener {
-            viewModel.navToForgot.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    navigate(it)
-                }
-            }
-
+            navigateToForgotPassword()
         }
-        viewModel.navigateToSignUp()
+
         viewBinding.signUp.setOnClickListener {
-            viewModel.navToSignUp.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    navigate(it)
-                }
-            }
+            navigateToSignUp()
         }
 
+    }
+
+    private fun signIn() {
+        val email = viewBinding.email.text.toString()
+        val pass = viewBinding.password.text.toString()
+        viewModel.signIn(email, pass)
+    }
+
+    private fun navigateToForgotPassword() {
+        viewModel.navigateToForgotPassword()
+        viewModel.navToForgot.observe(viewLifecycleOwner) {
+            if (it != null) {
+                navigate(it)
+            }
+        }
+    }
+
+    private fun navigateToSignUp() {
+        viewModel.navigateToSignUp()
+        viewModel.navToSignUp.observe(viewLifecycleOwner) {
+            if (it != null) {
+                navigate(it)
+            }
+        }
     }
 
     private fun showWarning() {

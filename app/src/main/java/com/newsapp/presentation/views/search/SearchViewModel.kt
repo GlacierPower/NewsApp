@@ -1,6 +1,7 @@
 package com.newsapp.presentation.views.search
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,9 @@ class SearchViewModel @Inject constructor(
     private var _loginNav = MutableLiveData<Int?>()
     val loginNav: LiveData<Int?> get() = _loginNav
 
+    private var _progressBar = MutableLiveData<Int>()
+    val progressBar: LiveData<Int> get() = _progressBar
+
     var searchPage = 1
     var searchResponse: NewsResponse? = null
 
@@ -46,6 +50,14 @@ class SearchViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun showProgressBar() {
+        _progressBar.postValue(View.VISIBLE)
+    }
+
+    fun hideProgressBar(){
+        _progressBar.postValue(View.GONE)
     }
 
     fun navigateToLogin() {

@@ -60,12 +60,4 @@ class NewsInteractor @Inject constructor(private val newsRepository: NewsReposit
         return newsRepository.getFavorite()
     }
 
-    suspend fun setDarkMode(uiMode: UIMode) {
-        newsRepository.setDarkMode(uiMode)
-    }
-
-   fun uIModeFlow():Flow<UIMode> {
-       return newsRepository.uIModeFlow()
-    }
-
 }

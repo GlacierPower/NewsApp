@@ -11,22 +11,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.newsapp.R
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentCategoryBinding
 import com.newsapp.presentation.adapters.CategoryAdapter
 import com.newsapp.presentation.adapters.NewsAdapter
 import com.newsapp.presentation.adapters.listener.INewsListener
+import com.newsapp.util.AlertListener
 import com.newsapp.util.Constants
 import com.newsapp.util.Constants.FAVORITE
+import com.newsapp.util.FragmentUtils.showAlert
 import com.newsapp.util.NavHelper.replaceGraph
 import com.newsapp.util.NavHelper.showToast
 import com.newsapp.util.Resources
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CategoryFragment : Fragment(), INewsListener {
+class CategoryFragment : Fragment(), INewsListener, AlertListener {
+
     private val viewModel: CategoryViewModel by viewModels()
     lateinit var categoryAdapter: CategoryAdapter
     lateinit var newsAdapter: NewsAdapter
@@ -40,12 +42,14 @@ class CategoryFragment : Fragment(), INewsListener {
     ): View {
 
         _viewBinding = FragmentCategoryBinding.inflate(inflater)
-
+        setHasOptionsMenu(true)
         return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         newsAdapter = NewsAdapter(this)
         viewBinding.newsRecycler.apply {
             setHasFixedSize(true)
@@ -60,6 +64,10 @@ class CategoryFragment : Fragment(), INewsListener {
         viewModel.navigateToLogin()
         viewModel.isUserLoggedIn()
 
+        viewModel.progressBar.observe(viewLifecycleOwner, Observer { progressBar ->
+            viewBinding.loadingLayout.visibility = progressBar
+        })
+
         viewModel.connection.observe(viewLifecycleOwner, Observer {
             it.let {
                 if (it) {
@@ -73,14 +81,14 @@ class CategoryFragment : Fragment(), INewsListener {
         viewModel.newsLD.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resources.Success -> {
-                    viewBinding.loadingLayout.visibility = View.GONE
+                    viewModel.hideProgressBar()
                     newsAdapter.differ.submitList(response.data!!.articles)
                 }
                 is Resources.Error -> {
-                    viewBinding.tryAgainLayout.visibility = View.VISIBLE
+                    viewModel.hideProgressBar()
                 }
                 is Resources.Loading -> {
-                    viewBinding.loadingLayout.visibility = View.VISIBLE
+                    viewModel.showProgressBar()
                 }
             }
         })
@@ -100,7 +108,7 @@ class CategoryFragment : Fragment(), INewsListener {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, newsResponse.url)
-            type = "text/plain"
+            type = getString(R.string.text_plain)
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
@@ -120,27 +128,18 @@ class CategoryFragment : Fragment(), INewsListener {
                     viewModel.onFavClicked(title)
                     showToast(FAVORITE)
                 } else {
-                    favoriteAlert()
+                    showAlert(this)
                 }
             }
         })
 
     }
 
-    private fun favoriteAlert() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setIcon(R.drawable.bookmarks)
-            .setTitle(getString(R.string.add_to_favorite))
-            .setMessage(getString(R.string.favorite_alert_message))
-            .setPositiveButton(getString(R.string.login)) { _, _ ->
-                viewModel.loginNav.observe(viewLifecycleOwner, Observer {
-                    if (it != null) {
-                        replaceGraph(it)
-                    }
-                })
+    override fun showAlertDialog() {
+        viewModel.loginNav.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                replaceGraph(it)
             }
-            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-            }
-            .show()
+        })
     }
 }

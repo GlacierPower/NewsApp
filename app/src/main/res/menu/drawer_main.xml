@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/newsFragment"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/saveFragment"
+            android:title="@string/favorite" />
+        <item
+            android:id="@+id/searchFragment"
+            android:title="@string/search" />
+    </group>
+
+    <item android:title="@string/settings">
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/btnLoginDrawer"
+                    android:checkable="false"
+                    android:title=""
+                    app:actionLayout="@layout/btn_login" />
+
+                <item
+                    android:id="@+id/btnLogOutDrawer"
+                    android:checkable="false"
+                    android:title=""
+                    app:actionLayout="@layout/btn_logout" />
+
+                <item
+                    android:id="@+id/darkModeNavDraw"
+                    android:checkable="false"
+                    android:title="@string/dark_mode"
+                    app:actionLayout="@layout/switch_layout" />
+
+            </group>
+        </menu>
+    </item>
+
+</menu>

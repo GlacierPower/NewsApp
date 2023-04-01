@@ -27,4 +27,23 @@
     <dimen name="margin_xxx_large">40dp</dimen>
     <dimen name="margin_xxxx_large">60dp</dimen>
     <dimen name="margin_xxxxx_large">90dp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_height">128dp</dimen>
+    <dimen name="nav_item_background_corner_radius_left">0dp</dimen>
+    <dimen name="nav_item_background_corner_radius_left_sq">4dp</dimen>
+    <dimen name="nav_item_background_corner_radius_right">100dp</dimen>
+    <dimen name="nav_item_background_corner_radius_right_sq">4dp</dimen>
+    <dimen name="nav_item_background_inset_bottom_sq">4dp</dimen>
+    <dimen name="nav_item_background_inset_default">0dp</dimen>
+    <dimen name="nav_item_background_inset_left">0dp</dimen>
+    <dimen name="nav_item_background_inset_left_sq">8dp</dimen>
+    <dimen name="nav_item_background_inset_right">8dp</dimen>
+    <dimen name="nav_item_background_inset_right_default">4dp</dimen>
+    <dimen name="nav_item_background_inset_right_sq">8dp</dimen>
+    <dimen name="nav_item_background_inset_top_sq">4dp</dimen>
+    <dimen name="nav_item_background_radius_default">1dp</dimen>
+    <dimen name="nav_item_horizontal_padding">24dp</dimen>
+
 </resources>

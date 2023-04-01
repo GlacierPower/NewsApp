@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@android:color/black</item>
     </style>
+
+    <style name="SplashScreenTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar"></style>
 
     <style name="Stroke_MaterialCardView" parent="@style/Widget.MaterialComponents.CardView">
         <item name="strokeWidth">2dp</item>
@@ -16,5 +25,19 @@
         <item name="cornerSizeTopLeft">20dp</item>
         <item name="cornerSizeBottomRight">20dp</item>
         <item name="cornerSizeBottomLeft">20dp</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textSize">@dimen/dimen_16</item>
     </style>
 </resources>
