@@ -15,6 +15,7 @@ import com.newsapp.data.data_base.FavoriteEntity
 import com.newsapp.databinding.FragmentSaveBinding
 import com.newsapp.presentation.adapters.SavedAdapter
 import com.newsapp.presentation.adapters.listener.ISaveListener
+import com.newsapp.util.AlertListener
 import com.newsapp.util.NavHelper.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
@@ -93,7 +94,7 @@ class FavoriteFragment : Fragment(), ISaveListener {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, newsResponse.url)
-            type = "text/plain"
+            type = getString(R.string.text_plain)
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
@@ -125,5 +126,6 @@ class FavoriteFragment : Fragment(), ISaveListener {
         }
         return false
     }
+
 
 }

@@ -1,5 +1,7 @@
 package com.newsapp.di
 
+import com.newsapp.domain.dark_mode.DarkModeInteractor
+import com.newsapp.domain.dark_mode.DarkModeRepository
 import com.newsapp.domain.news.NewsInteractor
 import com.newsapp.domain.news.NewsRepository
 import com.newsapp.domain.sign_in.SignInInteractor
@@ -14,6 +16,14 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 class DomainModule {
+
+    @Provides
+    fun provideDarkModeInteractor(
+        darkModeRepository: DarkModeRepository
+    ): DarkModeInteractor {
+        return DarkModeInteractor(darkModeRepository)
+    }
+
     @Provides
     fun provideNewsInteractor(
         newsRepository: NewsRepository

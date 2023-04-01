@@ -1,5 +1,6 @@
 package com.newsapp.presentation.views.source
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,6 +28,18 @@ class SourceViewModel @Inject constructor(
 
     private var _connection = MutableLiveData<Boolean>()
     val connection: LiveData<Boolean> get() = _connection
+
+    private var _progressBar = MutableLiveData<Int>()
+    val progressBar: LiveData<Int> get() = _progressBar
+
+
+    fun showProgressBar() {
+        _progressBar.postValue(View.VISIBLE)
+    }
+
+    fun hideProgressBar() {
+        _progressBar.postValue(View.GONE)
+    }
 
     fun getSourceNews() {
         _source.postValue(Resources.Loading())

@@ -34,10 +34,4 @@ interface NewsRepository {
 
     suspend fun getFavorite(): Flow<List<FavoriteEntity>>
 
-    suspend fun setDarkMode(uiMode: UIMode)
-
-    fun uIModeFlow():Flow<UIMode>
-
-
-
 }

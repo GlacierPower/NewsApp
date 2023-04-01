@@ -14,16 +14,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.newsapp.R
 import com.newsapp.data.data_base.NewsEntity
 import com.newsapp.databinding.FragmentSearchBinding
 import com.newsapp.presentation.adapters.SearchAdapter
 import com.newsapp.presentation.adapters.listener.ISearchListener
+import com.newsapp.util.AlertListener
 import com.newsapp.util.Constants.DELAY
 import com.newsapp.util.Constants.ERROR
 import com.newsapp.util.Constants.FAVORITE
 import com.newsapp.util.Constants.PAGE_SIZE
+import com.newsapp.util.FragmentUtils.showAlert
 import com.newsapp.util.NavHelper.replaceGraph
 import com.newsapp.util.NavHelper.showToast
 import com.newsapp.util.Resources
@@ -33,7 +34,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(), ISearchListener {
+class SearchFragment : Fragment(), ISearchListener, AlertListener {
 
     private val viewModel: SearchViewModel by viewModels()
 
@@ -64,6 +65,10 @@ class SearchFragment : Fragment(), ISearchListener {
         viewModel.isUserLoggedIn()
         viewModel.navigateToLogin()
 
+        viewModel.progressBar.observe(viewLifecycleOwner, Observer { progressBar ->
+            viewBinding.loadingLayout.visibility = progressBar
+        })
+
         viewBinding.search.addTextChangedListener { edit ->
             job?.cancel()
             job = viewLifecycleOwner.lifecycleScope.launch {
@@ -79,7 +84,7 @@ class SearchFragment : Fragment(), ISearchListener {
         viewModel.newsLD.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resources.Success -> {
-                    hideProgressBar()
+                    viewModel.hideProgressBar()
                     response.data.let { searchResponse ->
                         searchAdapter.differ.submitList(searchResponse?.articles?.toList())
                         val totalResult = searchResponse!!.totalResults / PAGE_SIZE + 2
@@ -91,34 +96,28 @@ class SearchFragment : Fragment(), ISearchListener {
                     }
                 }
                 is Resources.Error -> {
-                    hideProgressBar()
+                    viewModel.hideProgressBar()
                     response.message?.let { msg ->
                         Log.e("Search fragment", "$msg")
                         Toast.makeText(context, ERROR, Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Resources.Loading -> {
-                    viewBinding.loadingLayout.visibility = View.VISIBLE
-                    loading = true
+                    viewModel.showProgressBar()
                 }
             }
 
         })
     }
 
-    var loading = false
-    var lastPage = false
 
-    private fun hideProgressBar() {
-        viewBinding.loadingLayout.visibility = View.INVISIBLE
-        loading = false
-    }
+    var lastPage = false
 
     override fun onShareClicked(newsResponse: NewsEntity) {
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, newsResponse.url)
-            type = "text/plain"
+            type = getString(R.string.text_plain)
         }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
@@ -138,26 +137,17 @@ class SearchFragment : Fragment(), ISearchListener {
                     viewModel.onFavClicked(title)
                     showToast(FAVORITE)
                 } else
-                    favoriteAlert()
+                    showAlert(this)
             }
         })
     }
 
-    private fun favoriteAlert() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setIcon(R.drawable.bookmarks)
-            .setTitle(getString(R.string.add_to_favorite))
-            .setMessage(getString(R.string.favorite_alert_message))
-            .setPositiveButton(getString(R.string.login)) { _, _ ->
-                viewModel.loginNav.observe(viewLifecycleOwner, Observer {
-                    if (it != null) {
-                        replaceGraph(it)
-                    }
-                })
+    override fun showAlertDialog() {
+        viewModel.loginNav.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                replaceGraph(it)
             }
-            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-            }
-            .show()
+        })
     }
 
 }

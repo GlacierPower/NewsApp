@@ -1,6 +1,7 @@
 package com.newsapp.presentation.views.category
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,6 +39,9 @@ class CategoryViewModel @Inject constructor(
     private var _userLoggedIn = MutableLiveData<Boolean>()
     val userLoggedIn: LiveData<Boolean> get() = _userLoggedIn
 
+    private var _progressBar = MutableLiveData<Int>()
+    val progressBar: LiveData<Int> get() = _progressBar
+
     private var breakingNews = 1
 
     init {
@@ -46,6 +50,13 @@ class CategoryViewModel @Inject constructor(
         }
     }
 
+    fun showProgressBar() {
+        _progressBar.postValue(View.VISIBLE)
+    }
+
+    fun hideProgressBar() {
+        _progressBar.postValue(View.GONE)
+    }
 
     fun navigateToLogin() {
         _loginNav.value = R.navigation.auth_graph

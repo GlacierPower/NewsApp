@@ -1,9 +1,11 @@
 package com.newsapp.di
 
+import com.newsapp.data.repositotyImpl.DarkModeRepositoryImpl
 import com.newsapp.data.repositotyImpl.NewsRepositoryImpl
 import com.newsapp.data.repositotyImpl.SignInRepositoryImpl
 import com.newsapp.data.repositotyImpl.SignUpRepositoryImpl
 import com.newsapp.data.service.ApiService
+import com.newsapp.domain.dark_mode.DarkModeRepository
 import com.newsapp.domain.news.NewsRepository
 import com.newsapp.domain.sign_in.SignInRepository
 import com.newsapp.domain.sing_up.SignUpRepository
@@ -22,6 +24,12 @@ import java.util.concurrent.TimeUnit
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
+
+    @Binds
+    abstract fun bindDarkModeRepository(
+        darkModeRepositoryImpl: DarkModeRepositoryImpl
+    ): DarkModeRepository
+
     @Binds
     abstract fun bindNewsRepository(
         newsRepositoryImpl: NewsRepositoryImpl

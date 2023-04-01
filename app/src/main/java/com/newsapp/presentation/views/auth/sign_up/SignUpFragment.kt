@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.newsapp.R
 import com.newsapp.databinding.FragmentSignUpBinding
 import com.newsapp.util.NavHelper.navigate
@@ -31,19 +32,20 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewBinding.btnRegistration.setOnClickListener {
-            val email = viewBinding.emailRegister.text.toString()
-            val pass = viewBinding.passwordRegister.text.toString()
-            val confirm = viewBinding.confirmPass.text.toString()
-            if (viewModel.signUp(email, pass, confirm)) {
-                viewBinding.loadingLayout.visibility = View.VISIBLE
-                viewModel.nav.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        navigate(it)
+        viewModel.progressBar.observe(viewLifecycleOwner, Observer { progressBar ->
+            viewBinding.loadingLayout.visibility = progressBar
+        })
+
+        viewModel.signUp.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                viewModel.showProgressBar()
+                viewModel.nav.observe(viewLifecycleOwner) { destination ->
+                    if (destination != null) {
+                        navigate(destination)
                     }
                 }
             } else showWarning()
-        }
+        })
 
         viewModel.isSuccess.observe(viewLifecycleOwner) {
             if (it) {
@@ -55,6 +57,18 @@ class SignUpFragment : Fragment() {
         viewModel.exceptionMessage.observe(viewLifecycleOwner) { msg ->
             if (msg.isNotEmpty()) showToast(msg)
         }
+
+        viewBinding.btnRegistration.setOnClickListener {
+            signUp()
+        }
+
+    }
+
+    private fun signUp() {
+        val email = viewBinding.emailRegister.text.toString()
+        val pass = viewBinding.passwordRegister.text.toString()
+        val confirm = viewBinding.confirmPass.text.toString()
+        viewModel.signUp(email, pass, confirm)
     }
 
     private fun showWarning() {

@@ -1,5 +1,6 @@
 package com.newsapp.presentation.views.auth.sign_in
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,17 +32,33 @@ class SignInViewModel @Inject constructor(private val signInInteractor: SignInIn
     private var _navToForgot = MutableLiveData<Int?>()
     val navToForgot get() = _navToForgot
 
-    fun signIn(email: String, password: String): Boolean {
-        return if (validateEmail(email) && validatePassword(password)) {
+    private var _signIn = MutableLiveData<Boolean>()
+    val signIn: LiveData<Boolean> get() = _signIn
+
+    private var _progressBar = MutableLiveData<Int>()
+    val progressBar: LiveData<Int> get() = _progressBar
+
+
+    fun showProgressBar() {
+        _progressBar.postValue(View.VISIBLE)
+    }
+
+    fun hideProgressBar() {
+        _progressBar.postValue(View.GONE)
+    }
+
+    fun signIn(email: String, password: String) {
+        if (validateEmail(email) && validatePassword(password)) {
             viewModelScope.launch {
                 signInInteractor.signIn(email, password) { isSuccessful, message ->
                     _isSuccess.value = isSuccessful
                     _exceptionMessage.value = message
                 }
             }
-            true
-        } else false
+            _signIn.value = true
+        } else _signIn.value = false
     }
+
 
     fun replaceGraph() {
         _nav.value = R.navigation.nav_graph
@@ -55,7 +72,7 @@ class SignInViewModel @Inject constructor(private val signInInteractor: SignInIn
         _navToForgot.value = R.id.action_signInFragment_to_forgotPasswordFragment
     }
 
-     fun validateEmail(email: String): Boolean {
+    fun validateEmail(email: String): Boolean {
         var isValid = true
         if (email.isNullOrEmpty()) {
             isValid = false
@@ -69,7 +86,7 @@ class SignInViewModel @Inject constructor(private val signInInteractor: SignInIn
         return isValid
     }
 
-     fun validatePassword(password: String): Boolean {
+    fun validatePassword(password: String): Boolean {
         var isValid = true
         if (password.isNullOrEmpty()) {
             isValid = false

@@ -9,7 +9,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.newsapp.data.model.SourcesNews
 import com.newsapp.databinding.FragmentSourceBinding
 import com.newsapp.presentation.adapters.SourceAdapter
@@ -48,6 +47,10 @@ class SourceFragment : Fragment(), ISourceListener {
             setHasFixedSize(true)
             adapter = sourceAdapter
 
+
+            viewModel.progressBar.observe(viewLifecycleOwner, Observer { progressBar ->
+                viewBinding.loadingLayout.visibility = progressBar
+            })
             viewModel.connection.observe(viewLifecycleOwner, Observer {
                 it.let {
                     if (it) {
@@ -61,22 +64,21 @@ class SourceFragment : Fragment(), ISourceListener {
             viewModel.source.observe(viewLifecycleOwner, Observer { response ->
                 when (response) {
                     is Resources.Success -> {
-                        viewBinding.loadingLayout.visibility = View.GONE
                         sourceAdapter.differ.submitList(response.data!!.sources)
                         viewBinding.sourceRecycler.adapter = sourceAdapter
+                        viewModel.hideProgressBar()
                     }
                     is Resources.Error -> {
-                        viewBinding.loadingLayout.visibility = View.GONE
-                        viewBinding.tryAgainLayout.visibility = View.VISIBLE
+                        viewModel.hideProgressBar()
                     }
                     is Resources.Loading -> {
-                        viewBinding.loadingLayout.visibility = View.VISIBLE
+                        viewModel.showProgressBar()
                     }
                 }
             })
             viewBinding.newsLayout.setOnRefreshListener {
-                    viewModel.getSourceNews()
-                    viewBinding.newsLayout.isRefreshing = false
+                viewModel.getSourceNews()
+                viewBinding.newsLayout.isRefreshing = false
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.newsapp.presentation.views.auth.sign_up
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,11 +23,20 @@ class SignUpViewModel @Inject constructor(private val signUpInteractor: SignUpIn
     val isSuccess: LiveData<Boolean>
         get() = _isSuccess
 
+    private var _signUp = MutableLiveData<Boolean>()
+    val signUp: LiveData<Boolean> get() = _signUp
+
     private var _nav = MutableLiveData<Int?>()
     val nav: LiveData<Int?> get() = _nav
 
-    fun signUp(email: String, password: String, confirmPassword: String): Boolean {
-        return if (validateEmail(email) && validatePass(password) && validateConfirmPassword(
+    private var _progressBar = MutableLiveData<Int>()
+    val progressBar: LiveData<Int> get() = _progressBar
+
+    fun showProgressBar(){
+        _progressBar.postValue(View.VISIBLE)
+    }
+    fun signUp(email: String, password: String, confirmPassword: String) {
+        if (validateEmail(email) && validatePass(password) && validateConfirmPassword(
                 password,
                 confirmPassword
             )
@@ -37,8 +47,8 @@ class SignUpViewModel @Inject constructor(private val signUpInteractor: SignUpIn
                     _exceptionMessage.value = message
                 }
             }
-            true
-        } else false
+            _signUp.value = true
+        } else _signUp.value = false
 
     }
 
@@ -47,7 +57,7 @@ class SignUpViewModel @Inject constructor(private val signUpInteractor: SignUpIn
         _nav.value = R.id.signInFragment
     }
 
-     fun validateEmail(email: String): Boolean {
+    fun validateEmail(email: String): Boolean {
         var isValid = true
         if (email.isNullOrEmpty()) {
             isValid = false
@@ -59,7 +69,7 @@ class SignUpViewModel @Inject constructor(private val signUpInteractor: SignUpIn
         return isValid
     }
 
-     fun validatePass(password: String): Boolean {
+    fun validatePass(password: String): Boolean {
         var isValid = true
         if (password.isNullOrEmpty()) {
             isValid = false
@@ -72,7 +82,7 @@ class SignUpViewModel @Inject constructor(private val signUpInteractor: SignUpIn
         return isValid
     }
 
-     fun validateConfirmPassword(password: String, confirmPassword: String): Boolean {
+    fun validateConfirmPassword(password: String, confirmPassword: String): Boolean {
         var isValid = true
         if (confirmPassword.isNullOrEmpty()) {
             isValid = false

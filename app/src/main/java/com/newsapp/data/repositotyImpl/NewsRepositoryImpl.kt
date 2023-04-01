@@ -19,7 +19,6 @@ class NewsRepositoryImpl @Inject constructor(
     private val newsDao: NewsDao,
     private val apiService: ApiService,
     private val settingDataStore: SettingDataStore
-//    private val store: DataStore
 ) : NewsRepository {
     override suspend fun getNews(): Response<NewsResponse> {
         return withContext(Dispatchers.IO) {
@@ -152,16 +151,6 @@ class NewsRepositoryImpl @Inject constructor(
         return withContext(Dispatchers.IO) {
             newsDao.getFavoriteEntities()
         }
-    }
-
-    override suspend fun setDarkMode(uiMode: UIMode) {
-        withContext(Dispatchers.IO) {
-            settingDataStore.setDarkMode(uiMode)
-        }
-    }
-
-    override fun uIModeFlow(): Flow<UIMode> {
-        return settingDataStore.uiModeFlow
     }
 
 }
